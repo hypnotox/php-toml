@@ -34,5 +34,6 @@ return (new PhpCsFixer\Config())
         'phpdoc_align'           => true,
         'phpdoc_to_comment'      => false,
         'declare_strict_types'   => true,
+        'final_class'            => true,
     ])
     ->setFinder($finder);

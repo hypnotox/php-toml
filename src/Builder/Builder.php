@@ -7,7 +7,7 @@ namespace HypnoTox\Toml\Builder;
 use HypnoTox\Toml\Toml;
 use HypnoTox\Toml\TomlInterface;
 
-class Builder implements BuilderInterface
+final class Builder implements BuilderInterface
 {
     public function build(): TomlInterface
     {

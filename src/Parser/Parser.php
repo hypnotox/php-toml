@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Parser;
 
 use HypnoTox\Toml\Builder\BuilderInterface;
+use HypnoTox\Toml\Parser\Exception\ParserException;
 use HypnoTox\Toml\TomlInterface;
 
-class Parser implements ParserInterface
+final class Parser implements ParserInterface
 {
     public function __construct(
         private LexerInterface $lexer,
@@ -15,8 +16,16 @@ class Parser implements ParserInterface
     ) {
     }
 
+    /**
+     * @throws ParserException
+     */
     public function parse(string $input): TomlInterface
     {
+        if (!mb_check_encoding($input, 'UTF-8')) {
+            throw new ParserException('TOML must be UTF-8.');
+        }
+
+        $input = str_replace("\r\n", "\n", $input);
         $this->lexer->tokenize($input);
 
         return $this->builder->build();

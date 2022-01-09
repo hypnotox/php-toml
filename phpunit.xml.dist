@@ -14,7 +14,7 @@
 
     <testsuites>
         <testsuite name="Library Test Suite">
-            <directory>tests/unit</directory>
+            <directory>tests/Unit</directory>
         </testsuite>
     </testsuites>
 
