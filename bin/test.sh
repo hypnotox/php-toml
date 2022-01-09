@@ -1,0 +1,1 @@
+./toml-test/toml-test -- /usr/bin/php tests/toml.php

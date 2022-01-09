@@ -1,0 +1,120 @@
+name: CI
+
+# Controls when the workflow will run
+on:
+    # Triggers the workflow on push or pull request events but only for the main branch
+    push:
+        branches: [ main ]
+    pull_request:
+        branches: [ main ]
+
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+
+jobs:
+    php-cs-fixer:
+        name: Run php-cs-fixer
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v2
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: 8.1
+
+            -   name: Get composer cache directory
+                id: composer-cache
+                run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            -   name: Cache composer dependencies
+                uses: actions/cache@v2
+                with:
+                    path: ${{ steps.composer-cache.outputs.dir }}
+                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+                    restore-keys: ${{ runner.os }}-composer-
+
+            -   name: Install Composer dependencies
+                run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+            -   name: Run code style fixer
+                run: composer fix
+
+            -   name: Commit and push fixed files
+                if: ${{ matrix.operating-system == 'ubuntu-latest' }}
+                uses: stefanzweifel/git-auto-commit-action@v4
+                with:
+                    commit_message: "chore: run php-cs-fixer"
+
+    psalm:
+        name: Run psalm
+        runs-on: ubuntu-latest
+        needs: php-cs-fixer
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v2
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: 8.1
+
+            -   name: Get composer cache directory
+                id: composer-cache
+                run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            -   name: Cache composer dependencies
+                uses: actions/cache@v2
+                with:
+                    path: ${{ steps.composer-cache.outputs.dir }}
+                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+                    restore-keys: ${{ runner.os }}-composer-
+
+            -   name: Install Composer dependencies
+                run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+            -   name: Run psalm
+                run: composer lint
+
+    phpunit:
+        name: Test package with PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }}
+        runs-on: ${{ matrix.operating-system }}
+        needs: [ php-cs-fixer, psalm ]
+        strategy:
+            fail-fast: false
+            matrix:
+                # operating-system: [ ubuntu-latest, windows-latest, macos-latest ]
+                operating-system: [ ubuntu-latest ]
+                php-versions: [ '8.1' ]
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v2
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php-versions }}
+                    coverage: xdebug
+
+            -   name: Get composer cache directory
+                id: composer-cache
+                run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            -   name: Cache composer dependencies
+                uses: actions/cache@v2
+                with:
+                    path: ${{ steps.composer-cache.outputs.dir }}
+                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+                    restore-keys: ${{ runner.os }}-composer-
+
+            -   name: Install Composer dependencies
+                run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+            -   name: Run tests
+                run: composer unit-coverage
+
+            -   name: Upload code coverage
+                env:
+                    CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+                run: bash <(curl -s https://codecov.io/bash)
