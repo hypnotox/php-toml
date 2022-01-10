@@ -2,9 +2,9 @@
 
 [![CI Status](https://github.com/hypnotox/php-toml/actions/workflows/ci.yml/badge.svg)](https://github.com/hypnotox/php-toml)
 [![Code Coverage](https://codecov.io/gh/hypnotox/php-toml/branch/main/graph/badge.svg?token=FrsdlOIbRo)](https://codecov.io/gh/hypnotox/php-toml)
-[![Packagist Version](https://badgen.net/packagist/v/hypnotox/php-toml)](https://packagist.org/packages/hypnotox/pack)
-[![Packagist PHP Version Support](https://badgen.net/packagist/php/hypnotox/php-toml)](https://packagist.org/packages/hypnotox/pack)
-[![GitHub](https://badgen.net/packagist/license/hypnotox/php-toml)](/LICENSE.md)
+[![Packagist Version](https://badgen.net/packagist/v/hypnotox/toml)](https://packagist.org/packages/hypnotox/toml)
+[![Packagist PHP Version Support](https://badgen.net/packagist/php/hypnotox/toml)](https://packagist.org/packages/hypnotox/toml)
+[![GitHub](https://badgen.net/packagist/license/hypnotox/toml)](/LICENSE.md)
 
 A PHP package implementing a TOML file loader.
 
