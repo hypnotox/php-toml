@@ -22,10 +22,10 @@ abstract class AbstractTokenizer implements TokenizerInterface
     {
         throw new SyntaxException(
             sprintf(
-                'SyntaxError: %s on line %d offset %d ("%s")',
+                'SyntaxError: %s on line %d:%d: "%s"',
                 $message,
                 $seeker->getLineNumber(),
-                $seeker->getLineOffset(),
+                $seeker->getLineOffset() + 1,
                 $seeker->peekUntilEOL(),
             ),
         );

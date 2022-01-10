@@ -67,10 +67,10 @@ final class Lexer implements LexerInterface
                 );
                 throw new SyntaxException(
                     sprintf(
-                        'SyntaxError: %s on line %d offset %d ("%s")',
+                        'SyntaxError: %s on line %d:%d: "%s"',
                         'Could not parse input',
                         $seeker->getLineNumber(),
-                        $seeker->getLineOffset(),
+                        $seeker->getLineOffset() + 1,
                         $seeker->peekUntilEOL(),
                     ),
                 );
