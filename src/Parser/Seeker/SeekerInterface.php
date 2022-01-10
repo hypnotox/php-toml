@@ -6,6 +6,10 @@ namespace HypnoTox\Toml\Parser\Seeker;
 
 interface SeekerInterface
 {
+    public const WHITESPACE = [' ', "\t"];
+    public const EOL = "\n";
+    public const COMMENT = '#';
+
     public function __construct(string $input);
 
     public function getPointer(): int;
@@ -16,23 +20,27 @@ interface SeekerInterface
 
     public function getLineOffset(): int;
 
-    public function getLineOffsetWithoutPrecedingWhitespace(): int;
-
-    public function getLineWhitespaceLength(): int;
-
     /**
      * Returns $n characters without forwarding the pointer.
      */
     public function peek(int $n = 1): string;
 
-    public function peekUntilEOL(): string;
+    public function peekUntil(string $search, int $skip = 0): string;
 
     /**
-     * Returns first match without forwarding the pointer.
-     *
-     * @return array<array{offset: int, length: int, value: string}>
+     * @param string[] $search
      */
-    public function seek(string $pattern): array;
+    public function peekUntilOneOf(array $search, int $skip = 0): string;
+
+    public function peekUntilNotOneOf(array $search, int $skip = 0): string;
+
+    public function peekUntilCallback(callable $callback): string;
+
+    public function peekUntilWhitespace(): string;
+
+    public function peekUntilEOS(): string;
+
+    public function peekUntilEOL(): string;
 
     /**
      * Returns $n characters and forwards the pointer by $n.
@@ -40,8 +48,6 @@ interface SeekerInterface
     public function consume(int $n = 1): string;
 
     public function consumeWhitespace(): void;
-
-    public function consumeUntilEOL(): string;
 
     public function isEOF(): bool;
 }

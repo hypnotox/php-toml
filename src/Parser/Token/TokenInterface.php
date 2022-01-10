@@ -7,4 +7,12 @@ namespace HypnoTox\Toml\Parser\Token;
 interface TokenInterface
 {
     public function __construct(TokenType $type, string $value, int $line, int $offset);
+
+    public function getType(): TokenType;
+
+    public function getValue(): string;
+
+    public function getLine(): int;
+
+    public function getOffset(): int;
 }

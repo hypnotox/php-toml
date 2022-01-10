@@ -19,7 +19,7 @@ final class TokenStream implements TokenStreamInterface
         $this->tokens[] = $token;
     }
 
-    public function current(): TokenInterface
+    public function current(): TokenInterface|false
     {
         return current($this->tokens);
     }

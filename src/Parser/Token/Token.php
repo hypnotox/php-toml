@@ -13,4 +13,24 @@ final class Token implements TokenInterface
         public readonly int $offset,
     ) {
     }
+
+    public function getType(): TokenType
+    {
+        return $this->type;
+    }
+
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
+    public function getLine(): int
+    {
+        return $this->line;
+    }
+
+    public function getOffset(): int
+    {
+        return $this->offset;
+    }
 }

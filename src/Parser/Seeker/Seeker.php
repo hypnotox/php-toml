@@ -10,7 +10,6 @@ final class Seeker implements SeekerInterface
     private int $inputLength;
     private int $lineNumber = 1;
     private int $lineOffset = 0;
-    private int $lineWhitespaceLength = 0;
 
     public function __construct(
         private string $input,
@@ -31,6 +30,10 @@ final class Seeker implements SeekerInterface
 
     public function incrementLineNumber(int $n = 1): void
     {
+        if (0 === $n) {
+            return;
+        }
+
         $this->lineNumber += $n;
         $this->lineOffset = 0;
     }
@@ -40,93 +43,91 @@ final class Seeker implements SeekerInterface
         return $this->lineOffset;
     }
 
-    public function getLineOffsetWithoutPrecedingWhitespace(): int
-    {
-        return $this->lineOffset - $this->lineWhitespaceLength;
-    }
-
-    public function getLineWhitespaceLength(): int
-    {
-        return $this->lineWhitespaceLength;
-    }
-
     public function peek(int $n = 1): string
     {
         return substr($this->input, $this->pointer, $n);
     }
 
-    public function peekUntilEOL(): string
+    public function peekUntil(string $search, int $skip = 0): string
     {
-        $matches = $this->seek('~\n~');
+        $buffer = '';
+        $pointer = $this->pointer;
 
-        return $this->peek(\count($matches) > 0 ? $matches[0]['offset'] : ($this->inputLength - $this->pointer));
+        while (($char = $this->input[$pointer + $skip]) && $char !== $search) {
+            $buffer .= $char;
+            ++$pointer;
+        }
+
+        return $buffer;
     }
 
-    public function seek(string $pattern, string $flags = ''): array
+    public function peekUntilOneOf(array $search, int $skip = 0): string
     {
-        $str = substr($this->input, $this->pointer);
-        $matches = [];
+        $buffer = '';
+        $pointer = $this->pointer;
 
-        preg_match(
-            $pattern,
-            $str,
-            $matches,
-            \PREG_OFFSET_CAPTURE,
-        );
+        while (($char = $this->input[$pointer + $skip]) !== '' && !\in_array($char, $search, true)) {
+            $buffer .= $char;
+            ++$pointer;
+        }
 
-//        dump($pattern, $str, $matches);
+        return $buffer;
+    }
 
-        return array_filter(
-            array_map(
-                static fn (array $match) => '' !== $match[0] ? [
-                    'offset' => $match[1],
-                    'length' => \strlen($match[0]),
-                    'value'  => $match[0],
-                ] : null,
-                $matches,
-            ),
-        );
+    public function peekUntilNotOneOf(array $search, int $skip = 0): string
+    {
+        $buffer = '';
+        $pointer = $this->pointer;
+
+        while (($char = $this->input[$pointer + $skip]) && \in_array($char, $search, true)) {
+            $buffer .= $char;
+            ++$pointer;
+        }
+
+        return $buffer;
+    }
+
+    public function peekUntilCallback(callable $callback): string
+    {
+        $buffer = '';
+        $pointer = $this->pointer;
+
+        while (($char = $this->input[$pointer]) && $callback($char)) {
+            $buffer .= $char;
+            ++$pointer;
+        }
+
+        return $buffer;
+    }
+
+    public function peekUntilWhitespace(): string
+    {
+        return $this->peekUntilOneOf([' ', "\t"]);
+    }
+
+    public function peekUntilEOS(): string
+    {
+        return $this->peekUntilOneOf([self::EOL, '#']);
+    }
+
+    public function peekUntilEOL(): string
+    {
+        return $this->peekUntil(self::EOL);
     }
 
     public function consume(int $n = 1): string
     {
         $subString = $this->peek($n);
         $this->forward($n);
-        $matches = [];
-
-        if (preg_match_all('~\n~', $subString, $matches) && \count($matches) > 0) {
-            $this->incrementLineNumber(\count($matches[0]));
-        }
+        $this->incrementLineNumber(\strlen($subString) - \strlen(str_replace("\n", '', $subString)));
 
         return $subString;
     }
 
-    public function consumeUntilEOL(): string
-    {
-        $matches = $this->seek('~\n~');
-        $string = $this->consume(\count($matches) > 0 ? $matches[0]['offset'] : ($this->inputLength - $this->pointer));
-        $this->incrementLineNumber();
-        $this->consumeWhitespace();
-
-        return $string;
-    }
-
     public function consumeWhitespace(): void
     {
-        $whitespaceMatch = $this->seek('~^[\s]+?~');
-
-        if (0 === \count($whitespaceMatch)) {
-            return;
-        }
-
-        $this->lineWhitespaceLength = $whitespaceMatch[0]['length'];
-        $string = $this->consume($this->lineWhitespaceLength);
-
-        if (str_contains($string, "\n")) {
-            $this->incrementLineNumber();
-            $this->lineWhitespaceLength = 0;
-            $this->consumeWhitespace();
-        }
+        $string = $this->peekUntilNotOneOf(self::WHITESPACE);
+        $this->consume(\strlen($string));
     }
 
     public function isEOF(): bool

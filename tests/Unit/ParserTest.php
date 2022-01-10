@@ -24,9 +24,9 @@ final class ParserTest extends BaseTest
             new Builder(),
         );
 
-        $input = file_get_contents(__DIR__.'/../Fixtures/valid/example.toml');
+        $input = file_get_contents(__DIR__.'/../Fixtures/valid/spec-example-1.toml');
         $toml = $parser->parse($input);
 
-        $this->assertStringEqualsFile(__DIR__.'/../Fixtures/valid/example.json', $toml->toJson());
+        $this->assertStringEqualsFile(__DIR__.'/../Fixtures/valid/spec-example-1.json', $toml->toJson());
     }
 }

@@ -4,14 +4,25 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\Token;
 
-enum TokenType: string
+enum TokenType
 {
-    case T_BASIC_STRING = 'basic-string';
-    case T_QUOTED_STRING = 'quoted-string';
-    case T_LITERAL_STRING = 'literal-string';
-    case T_EQUALS = 'equals';
-    case T_BOOLEAN = 'boolean';
-    case T_TABLE_HEADER = 'table';
-    case T_DATETIME = 'datetime';
-    case T_ARRAY = 'array';
+    // Characters
+    case T_RETURN;
+    case T_PUNCTUATION;
+
+    // Structures
+    case T_KEY;
+    case T_TABLE_HEAD;
+    case T_ARRAY_START;
+    case T_ARRAY_END;
+
+    // Values
+    case T_BASIC_STRING;
+    case T_QUOTED_STRING;
+    case T_LITERAL_STRING;
+    case T_EQUALS;
+    case T_BOOLEAN;
+    case T_DATETIME;
+
+    case T_COMMENT;
 }

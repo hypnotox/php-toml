@@ -2,6 +2,7 @@
 
 $finder = (new PhpCsFixer\Finder())
     ->in(__DIR__)
+    ->notPath('src/Parser/Token/TokenType.php')
     ->exclude(
         [
             'assets',
