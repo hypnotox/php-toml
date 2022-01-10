@@ -24,6 +24,7 @@ final class Lexer implements LexerInterface
     }
 
     /**
+     * TODO: Reimplement tokenizer without RegEx lookaheads since the format is fairly easy to read without it.
      * @throws SyntaxException
      */
     public function tokenize(string $input): TokenStreamInterface
