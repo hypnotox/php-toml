@@ -14,7 +14,7 @@ final class PunctuationTokenizer extends AbstractTokenizer
     {
         $char = $seeker->peek();
 
-        if ($char === '=') {
+        if ('=' === $char) {
             $lineNumber = $seeker->getLineNumber();
             $lineOffset = $seeker->getLineOffset();
 
@@ -30,13 +30,13 @@ final class PunctuationTokenizer extends AbstractTokenizer
             return true;
         }
 
-        if ($char === '[' && $seeker->getLineOffset() > 0) {
+        if ('[' === $char) {
             $lineNumber = $seeker->getLineNumber();
             $lineOffset = $seeker->getLineOffset();
 
             $tokenStream->addToken(
                 $this->tokenFactory->make(
-                    TokenType::T_ARRAY_START,
+                    TokenType::T_BRACKET_OPEN,
                     $seeker->consume(),
                     $lineNumber,
                     $lineOffset,
@@ -46,13 +46,13 @@ final class PunctuationTokenizer extends AbstractTokenizer
             return true;
         }
 
-        if ($char === ']') {
+        if (']' === $char) {
             $lineNumber = $seeker->getLineNumber();
             $lineOffset = $seeker->getLineOffset();
 
             $tokenStream->addToken(
                 $this->tokenFactory->make(
-                    TokenType::T_ARRAY_END,
+                    TokenType::T_BRACKET_CLOSE,
                     $seeker->consume(),
                     $lineNumber,
                     $lineOffset,

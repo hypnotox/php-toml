@@ -17,7 +17,6 @@ use HypnoTox\Toml\Parser\Tokenizer\EndOfLineTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\LiteralStringTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\PunctuationTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\QuotedStringTokenizer;
-use HypnoTox\Toml\Parser\Tokenizer\TableHeadTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\TokenizerInterface;
 
 final class Lexer implements LexerInterface
@@ -42,7 +41,6 @@ final class Lexer implements LexerInterface
             $this->tokenizer = [
                 new CommentTokenizer($this->tokenFactory),
                 new EndOfLineTokenizer($this->tokenFactory),
-                new TableHeadTokenizer($this->tokenFactory),
                 new PunctuationTokenizer($this->tokenFactory),
                 new DatetimeTokenizer($this->tokenFactory),
                 new QuotedStringTokenizer($this->tokenFactory),
@@ -65,8 +63,6 @@ final class Lexer implements LexerInterface
             $lastPointer = $seeker->getPointer();
             $seeker->consumeWhitespace();
 
-            dump($seeker->peek());
-
             foreach ($this->tokenizer as $tokenizer) {
                 if ($tokenizer->tokenize($seeker, $tokenStream)) {
                     continue 2;
@@ -74,7 +70,6 @@ final class Lexer implements LexerInterface
             }
 
             if ($seeker->getPointer() === $lastPointer) {
-                dump((string) $tokenStream);
                 throw new SyntaxException(
                     sprintf(
                         'SyntaxError: %s on line %d:%d: "%s"',
@@ -86,8 +81,6 @@ final class Lexer implements LexerInterface
                 );
             }
         }
-
-        dd((string) $tokenStream);
 
         return $tokenStream;
     }

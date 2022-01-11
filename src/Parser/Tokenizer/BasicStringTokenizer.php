@@ -16,7 +16,7 @@ final class BasicStringTokenizer extends AbstractTokenizer
         $lineOffset = $seeker->getLineOffset();
         $string = $seeker->peekUntilOneOf(['=', ',', '[', ']', SeekerInterface::COMMENT, SeekerInterface::EOL, ...SeekerInterface::WHITESPACE]);
 
-        if (trim($string) === '') {
+        if ('' === trim($string)) {
             return false;
         }
 

@@ -25,6 +25,7 @@ final class QuotedStringTokenizer extends AbstractTokenizer
                             }
 
                             $lastChar = $char;
+
                             return !\in_array($char, ['"', SeekerInterface::EOL], true);
                         },
                     ),
