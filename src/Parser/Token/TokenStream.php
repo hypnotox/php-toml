@@ -43,4 +43,22 @@ final class TokenStream implements TokenStreamInterface
     {
         reset($this->tokens);
     }
+
+    public function __toString()
+    {
+        return implode(
+            "\n",
+            array_map(
+                static fn (TokenInterface $token) => sprintf(
+                    '%s(%d:%d:%d): %s',
+                    $token->getType()->name,
+                    $token->getLine(),
+                    $token->getOffset(),
+                    \strlen($token->getValue()),
+                    str_replace("\n", '\n', $token->getValue()),
+                ),
+                $this->tokens,
+            ),
+        );
+    }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\Token;
 
-interface TokenStreamInterface extends \Iterator
+interface TokenStreamInterface extends \Iterator, \Stringable
 {
     /**
      * @param list<TokenInterface> $tokens

@@ -9,6 +9,7 @@ enum TokenType
     // Characters
     case T_RETURN;
     case T_PUNCTUATION;
+    case T_EQUALS;
 
     // Structures
     case T_KEY;
@@ -20,9 +21,7 @@ enum TokenType
     case T_BASIC_STRING;
     case T_QUOTED_STRING;
     case T_LITERAL_STRING;
-    case T_EQUALS;
+    case T_DOTTED_STRING;
     case T_BOOLEAN;
     case T_DATETIME;
-
-    case T_COMMENT;
 }

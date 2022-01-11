@@ -7,12 +7,12 @@ namespace HypnoTox\Toml\Parser\Seeker;
 final class Seeker implements SeekerInterface
 {
     private int $pointer = 0;
-    private int $inputLength;
-    private int $lineNumber = 1;
-    private int $lineOffset = 0;
+    private readonly int $inputLength;
 
     public function __construct(
         private string $input,
+        private int $lineNumber = 1,
+        private int $lineOffset = 0,
     ) {
         $this->inputLength = \strlen($this->input);
         $this->consumeWhitespace();
@@ -35,6 +35,7 @@ final class Seeker implements SeekerInterface
         }
 
         $this->lineNumber += $n;
+        $this->consumeWhitespace();
         $this->lineOffset = 0;
     }
 
@@ -48,12 +49,12 @@ final class Seeker implements SeekerInterface
         return substr($this->input, $this->pointer, $n);
     }
 
-    public function peekUntil(string $search, int $skip = 0): string
+    public function peekUntil(string $search): string
     {
         $buffer = '';
         $pointer = $this->pointer;
 
-        while (($char = $this->input[$pointer + $skip]) && $char !== $search) {
+        while ($pointer < $this->inputLength && ($char = $this->input[$pointer]) !== '' && $char !== $search) {
             $buffer .= $char;
             ++$pointer;
         }
@@ -61,12 +62,12 @@ final class Seeker implements SeekerInterface
         return $buffer;
     }
 
-    public function peekUntilOneOf(array $search, int $skip = 0): string
+    public function peekUntilOneOf(array $search): string
     {
         $buffer = '';
         $pointer = $this->pointer;
 
-        while (($char = $this->input[$pointer + $skip]) !== '' && !\in_array($char, $search, true)) {
+        while ($pointer < $this->inputLength && ($char = $this->input[$pointer]) !== '' && !\in_array($char, $search, true)) {
             $buffer .= $char;
             ++$pointer;
         }
@@ -74,12 +75,12 @@ final class Seeker implements SeekerInterface
         return $buffer;
     }
 
-    public function peekUntilNotOneOf(array $search, int $skip = 0): string
+    public function peekUntilNotOneOf(array $search): string
     {
         $buffer = '';
         $pointer = $this->pointer;
 
-        while (($char = $this->input[$pointer + $skip]) && \in_array($char, $search, true)) {
+        while ($pointer < $this->inputLength && ($char = $this->input[$pointer]) !== '' && \in_array($char, $search, true)) {
             $buffer .= $char;
             ++$pointer;
         }
@@ -92,7 +93,7 @@ final class Seeker implements SeekerInterface
         $buffer = '';
         $pointer = $this->pointer;
 
-        while (($char = $this->input[$pointer]) && $callback($char)) {
+        while ($pointer < $this->inputLength && ($char = $this->input[$pointer]) !== '' && $callback($char)) {
             $buffer .= $char;
             ++$pointer;
         }
@@ -102,7 +103,7 @@ final class Seeker implements SeekerInterface
 
     public function peekUntilWhitespace(): string
     {
-        return $this->peekUntilOneOf([' ', "\t"]);
+        return $this->peekUntilOneOf([self::EOL, ...self::WHITESPACE]);
     }
 
     public function peekUntilEOS(): string

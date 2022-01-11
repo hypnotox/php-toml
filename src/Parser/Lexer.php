@@ -7,13 +7,15 @@ namespace HypnoTox\Toml\Parser;
 use HypnoTox\Toml\Parser\Exception\SyntaxException;
 use HypnoTox\Toml\Parser\Seeker\SeekerFactoryInterface;
 use HypnoTox\Toml\Parser\Token\TokenFactoryInterface;
-use HypnoTox\Toml\Parser\Token\TokenInterface;
 use HypnoTox\Toml\Parser\Token\TokenStreamFactoryInterface;
 use HypnoTox\Toml\Parser\Token\TokenStreamInterface;
+use HypnoTox\Toml\Parser\Tokenizer\BasicStringTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\CommentTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\DatetimeTokenizer;
+use HypnoTox\Toml\Parser\Tokenizer\DottedStringTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\EndOfLineTokenizer;
-use HypnoTox\Toml\Parser\Tokenizer\KeyTokenizer;
+use HypnoTox\Toml\Parser\Tokenizer\LiteralStringTokenizer;
+use HypnoTox\Toml\Parser\Tokenizer\PunctuationTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\QuotedStringTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\TableHeadTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\TokenizerInterface;
@@ -25,19 +27,30 @@ final class Lexer implements LexerInterface
      */
     private readonly array $tokenizer;
 
+    /**
+     * @param TokenizerInterface[]|null $tokenizer
+     */
     public function __construct(
         private SeekerFactoryInterface $seekerFactory,
         private TokenStreamFactoryInterface $tokenStreamFactory,
         private TokenFactoryInterface $tokenFactory,
+        array $tokenizer = null,
     ) {
-        $this->tokenizer = [
-            new TableHeadTokenizer($this->tokenFactory),
-            new KeyTokenizer($this->tokenFactory),
-            new DatetimeTokenizer($this->tokenFactory),
-            new QuotedStringTokenizer($this->tokenFactory),
-            new CommentTokenizer($this->tokenFactory),
-            new EndOfLineTokenizer($this->tokenFactory),
-        ];
+        if (null !== $tokenizer) {
+            $this->tokenizer = $tokenizer;
+        } else {
+            $this->tokenizer = [
+                new CommentTokenizer($this->tokenFactory),
+                new EndOfLineTokenizer($this->tokenFactory),
+                new TableHeadTokenizer($this->tokenFactory),
+                new PunctuationTokenizer($this->tokenFactory),
+                new DatetimeTokenizer($this->tokenFactory),
+                new QuotedStringTokenizer($this->tokenFactory),
+                new LiteralStringTokenizer($this->tokenFactory),
+                new DottedStringTokenizer($this->tokenFactory),
+                new BasicStringTokenizer($this->tokenFactory),
+            ];
+        }
     }
 
     /**
@@ -47,10 +60,12 @@ final class Lexer implements LexerInterface
     {
         $tokenStream = $this->tokenStreamFactory->make();
         $seeker = $this->seekerFactory->make($input);
-        $lastPointer = $seeker->getPointer();
 
         while (!$seeker->isEOF()) {
+            $lastPointer = $seeker->getPointer();
             $seeker->consumeWhitespace();
+
+            dump($seeker->peek());
 
             foreach ($this->tokenizer as $tokenizer) {
                 if ($tokenizer->tokenize($seeker, $tokenStream)) {
@@ -59,12 +74,7 @@ final class Lexer implements LexerInterface
             }
 
             if ($seeker->getPointer() === $lastPointer) {
-                dump(
-                    array_map(
-                        fn (TokenInterface $token) => $token->getType()->name.': "'.str_replace("\n", '\n', $token->getValue()).'" ('.$token->getLine().':'.$token->getOffset().':'.\strlen($token->getValue()).')',
-                        iterator_to_array($tokenStream),
-                    ),
-                );
+                dump((string) $tokenStream);
                 throw new SyntaxException(
                     sprintf(
                         'SyntaxError: %s on line %d:%d: "%s"',
@@ -75,9 +85,9 @@ final class Lexer implements LexerInterface
                     ),
                 );
             }
-
-            $lastPointer = $seeker->getPointer();
         }
+
+        dd((string) $tokenStream);
 
         return $tokenStream;
     }

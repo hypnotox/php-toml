@@ -10,7 +10,7 @@ interface SeekerInterface
     public const EOL = "\n";
     public const COMMENT = '#';
 
-    public function __construct(string $input);
+    public function __construct(string $input, int $lineNumber = 1, int $lineOffset = 0);
 
     public function getPointer(): int;
 
@@ -25,14 +25,14 @@ interface SeekerInterface
      */
     public function peek(int $n = 1): string;
 
-    public function peekUntil(string $search, int $skip = 0): string;
+    public function peekUntil(string $search): string;
 
     /**
      * @param string[] $search
      */
-    public function peekUntilOneOf(array $search, int $skip = 0): string;
+    public function peekUntilOneOf(array $search): string;
 
-    public function peekUntilNotOneOf(array $search, int $skip = 0): string;
+    public function peekUntilNotOneOf(array $search): string;
 
     public function peekUntilCallback(callable $callback): string;
 

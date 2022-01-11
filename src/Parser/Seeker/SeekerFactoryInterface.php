@@ -6,5 +6,5 @@ namespace HypnoTox\Toml\Parser\Seeker;
 
 interface SeekerFactoryInterface
 {
-    public function make(string $input): SeekerInterface;
+    public function make(string $input, int $lineNumber = 1, int $lineOffset = 0): SeekerInterface;
 }
