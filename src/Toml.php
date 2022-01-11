@@ -19,6 +19,7 @@ final class Toml implements TomlInterface
      */
     public function toJson(): string
     {
+        // TODO: Implement JSON string representation according to TOML test suite
         return json_encode($this->toArray(), \JSON_THROW_ON_ERROR);
     }
 }

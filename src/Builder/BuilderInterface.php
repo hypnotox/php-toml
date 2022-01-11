@@ -9,4 +9,6 @@ use HypnoTox\Toml\TomlInterface;
 interface BuilderInterface
 {
     public function build(): TomlInterface;
+
+    // TODO: Create interface for TOML builder
 }

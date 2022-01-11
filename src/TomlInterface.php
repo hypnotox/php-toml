@@ -9,6 +9,8 @@ namespace HypnoTox\Toml;
  */
 interface TomlInterface
 {
+    // TODO: Create interface for TOML objects
+
     public function toArray(): array;
 
     public function toJson(): string;
