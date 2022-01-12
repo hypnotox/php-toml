@@ -1,6 +1,8 @@
 # hypnotox/toml
 
 [![CI Status](https://github.com/hypnotox/php-toml/actions/workflows/ci.yml/badge.svg)](https://github.com/hypnotox/php-toml)
+[![Psalm Status](https://badgen.net/github/checks/hypnotox/php-toml/main/psalm)](https://github.com/hypnotox/php-toml)
+[![Unit Test Status](https://badgen.net/github/checks/hypnotox/php-toml/main/phpunit)](https://github.com/hypnotox/php-toml)
 [![Code Coverage](https://codecov.io/gh/hypnotox/php-toml/branch/main/graph/badge.svg?token=FrsdlOIbRo)](https://codecov.io/gh/hypnotox/php-toml)
 [![Packagist Version](https://badgen.net/packagist/v/hypnotox/toml)](https://packagist.org/packages/hypnotox/toml)
 [![Packagist PHP Version Support](https://badgen.net/packagist/php/hypnotox/toml)](https://packagist.org/packages/hypnotox/toml)
