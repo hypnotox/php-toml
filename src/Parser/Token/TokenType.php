@@ -12,6 +12,7 @@ enum TokenType
     case T_EQUALS;
     case T_BRACKET_OPEN;
     case T_BRACKET_CLOSE;
+    case T_HASHTAG;
 
     // Values
     case T_INTEGER;
