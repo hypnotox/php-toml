@@ -1,5 +1,6 @@
-#!/usr/bin/php
 <?php
+
+declare(strict_types=1);
 
 use HypnoTox\Toml\Builder\Builder;
 use HypnoTox\Toml\Parser\Lexer;
@@ -15,10 +16,10 @@ $data = stream_get_contents(\STDIN);
 
 $parser = new Parser(
     new Lexer(
-            new SeekerFactory(),
-            new TokenStreamFactory(),
-            new TokenFactory(),
-        ),
+        new SeekerFactory(),
+        new TokenStreamFactory(),
+        new TokenFactory(),
+    ),
     new Builder(),
 );
 
