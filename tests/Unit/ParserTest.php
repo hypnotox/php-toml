@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use HypnoTox\Toml\Builder\Builder;
+use HypnoTox\Toml\Parser\Exception\ParserExceptionInterface;
 use HypnoTox\Toml\Parser\Lexer;
 use HypnoTox\Toml\Parser\Parser;
 use HypnoTox\Toml\Parser\Seeker\SeekerFactory;
@@ -13,9 +14,26 @@ use HypnoTox\Toml\Parser\Token\TokenStreamFactory;
 
 final class ParserTest extends BaseTest
 {
-    public function testCanParseToml(): void
+    /**
+     * @dataProvider validInputProvider
+     */
+    public function testCanParseValidInput(Parser $parser, string $input, string $expectedJson): void
     {
-        $parser = new Parser(
+        $this->assertJsonStringEqualsJsonString($expectedJson, $parser->parse($input)->toJson());
+    }
+
+    /**
+     * @dataProvider invalidInputProvider
+     */
+    public function testWillThrowOnInvalidInput(Parser $parser, string $input): void
+    {
+        $this->expectException(ParserExceptionInterface::class);
+        $parser->parse($input);
+    }
+
+    public function getParser(): Parser
+    {
+        return new Parser(
             new Lexer(
                 new SeekerFactory(),
                 new TokenStreamFactory(),
@@ -23,10 +41,52 @@ final class ParserTest extends BaseTest
             ),
             new Builder(),
         );
+    }
 
-        $input = file_get_contents(__DIR__.'/../Fixtures/valid/spec-example-1.toml');
-        $toml = $parser->parse($input);
+    public function validInputProvider(): \Generator
+    {
+        /** @var array $values */
+        foreach ($this->generateFromDirectory(__DIR__.'/../Fixtures/valid') as $values) {
+            array_unshift($values, $this->getParser());
 
-        $this->assertStringEqualsFile(__DIR__.'/../Fixtures/valid/spec-example-1.json', $toml->toJson());
+            yield $values;
+        }
+    }
+
+    public function invalidInputProvider(): \Generator
+    {
+        /** @var array $values */
+        foreach ($this->generateFromDirectory(__DIR__.'/../Fixtures/invalid', false) as $values) {
+            array_unshift($values, $this->getParser());
+
+            yield $values;
+        }
+    }
+
+    private function generateFromDirectory(string $directory, bool $withJson = true): \Generator
+    {
+        $directoryIterator = scandir($directory);
+
+        foreach ($directoryIterator as $value)
+        {
+            if (in_array($value, ['.', '..'])) {
+                continue;
+            }
+
+            if (is_dir($directory . DIRECTORY_SEPARATOR . $value)) {
+                yield from $this->generateFromDirectory($directory . DIRECTORY_SEPARATOR . $value, $withJson);
+            } elseif (str_ends_with($value, '.toml')) {
+                if ($withJson) {
+                    yield [
+                        file_get_contents($directory . DIRECTORY_SEPARATOR . $value),
+                        file_get_contents($directory.DIRECTORY_SEPARATOR.str_replace('.toml', '.json', $value)),
+                    ];
+                } else {
+                    yield [
+                        file_get_contents($directory . DIRECTORY_SEPARATOR . $value),
+                    ];
+                }
+            }
+        }
     }
 }
