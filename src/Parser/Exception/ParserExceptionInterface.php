@@ -6,5 +6,4 @@ namespace HypnoTox\Toml\Parser\Exception;
 
 interface ParserExceptionInterface extends \Throwable
 {
-
 }
