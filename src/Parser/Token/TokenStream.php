@@ -49,14 +49,7 @@ final class TokenStream implements TokenStreamInterface
         return implode(
             "\n",
             array_map(
-                static fn (TokenInterface $token) => sprintf(
-                    '%s(%d:%d:%d): %s',
-                    $token->getType()->name,
-                    $token->getLine(),
-                    $token->getOffset(),
-                    \strlen($token->getValue()),
-                    str_replace("\n", '\n', $token->getValue()),
-                ),
+                static fn (TokenInterface $token) => (string) $token,
                 $this->tokens,
             ),
         );

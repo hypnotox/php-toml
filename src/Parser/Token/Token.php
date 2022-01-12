@@ -33,4 +33,16 @@ final class Token implements TokenInterface
     {
         return $this->offset;
     }
+
+    public function __toString(): string
+    {
+        return sprintf(
+            '%s(%d:%d:%d): "%s"',
+            $this->getType()->name,
+            $this->getLine(),
+            $this->getOffset(),
+            \strlen($this->getValue()),
+            str_replace("\n", '\n', $this->getValue()),
+        );
+    }
 }
