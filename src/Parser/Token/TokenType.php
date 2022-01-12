@@ -22,4 +22,6 @@ enum TokenType
     case T_DOTTED_STRING;
     case T_BOOLEAN;
     case T_DATETIME;
+    case T_DATE;
+    case T_TIME;
 }
