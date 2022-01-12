@@ -26,9 +26,7 @@ final class Parser implements ParserInterface
         }
 
         $input = str_replace("\r\n", "\n", $input);
-        $tokens = $this->lexer->tokenize($input);
-
-        // TODO: Loop over $tokens and build TOML
+        $this->lexer->tokenize($input);
 
         return $this->builder->build();
     }
