@@ -5,9 +5,9 @@ declare(strict_types=1);
 use HypnoTox\Toml\Builder\Builder;
 use HypnoTox\Toml\Parser\Lexer;
 use HypnoTox\Toml\Parser\Parser;
-use HypnoTox\Toml\Parser\Seeker\SeekerFactory;
+use HypnoTox\Toml\Parser\Stream\StringStreamFactory;
+use HypnoTox\Toml\Parser\Stream\TokenStreamFactory;
 use HypnoTox\Toml\Parser\Token\TokenFactory;
-use HypnoTox\Toml\Parser\Token\TokenStreamFactory;
 
 include 'vendor/autoload.php';
 
@@ -16,7 +16,7 @@ $data = stream_get_contents(\STDIN);
 
 $parser = new Parser(
     new Lexer(
-        new SeekerFactory(),
+        new StringStreamFactory(),
         new TokenStreamFactory(),
         new TokenFactory(),
     ),

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Parser\Seeker;
+namespace HypnoTox\Toml\Parser\Stream;
 
-interface SeekerInterface
+interface StringStreamInterface extends StreamInterface
 {
     public const WHITESPACE = [' ', "\t"];
     public const EOL = "\n";

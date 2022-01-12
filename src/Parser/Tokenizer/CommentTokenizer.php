@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\Tokenizer;
 
-use HypnoTox\Toml\Parser\Seeker\SeekerInterface;
-use HypnoTox\Toml\Parser\Token\TokenStreamInterface;
+use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
+use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
 
 final class CommentTokenizer extends AbstractTokenizer
 {
-    public function tokenize(SeekerInterface $seeker, TokenStreamInterface $tokenStream): bool
+    public function tokenize(StringStreamInterface $stream, TokenStreamInterface $tokenStream): bool
     {
-        if (SeekerInterface::COMMENT === $seeker->peek()) {
+        if (StringStreamInterface::COMMENT === $stream->peek()) {
             // Just consume comments without adding a token
-            $seeker->consume(\strlen($seeker->peekUntilEOL()));
+            $stream->consume(\strlen($stream->peekUntilEOL()));
 
             return true;
         }

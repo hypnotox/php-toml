@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\Tokenizer;
 
-use HypnoTox\Toml\Parser\Seeker\SeekerInterface;
-use HypnoTox\Toml\Parser\Token\TokenStreamInterface;
+use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
+use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Parser\Token\TokenType;
 
 final class LiteralStringTokenizer extends AbstractTokenizer
 {
-    public function tokenize(SeekerInterface $seeker, TokenStreamInterface $tokenStream): bool
+    public function tokenize(StringStreamInterface $stream, TokenStreamInterface $tokenStream): bool
     {
-        if ('\'' === $seeker->peek() && '\'\'\'' !== $seeker->peek(3)) {
-            $lineNumber = $seeker->getLineNumber();
-            $lineOffset = $seeker->getLineOffset();
+        if ('\'' === $stream->peek() && '\'\'\'' !== $stream->peek(3)) {
+            $lineNumber = $stream->getLineNumber();
+            $lineOffset = $stream->getLineOffset();
             $lastChar = null;
-            $string = $seeker->consume(
+            $string = $stream->consume(
                 \strlen(
-                    $seeker->peekUntilCallback(
+                    $stream->peekUntilCallback(
                         function (string $char) use (&$lastChar) {
                             if ('\'' === $char && '\\\'' !== $lastChar) {
                                 return true;
@@ -26,18 +26,18 @@ final class LiteralStringTokenizer extends AbstractTokenizer
 
                             $lastChar = $char;
 
-                            return !\in_array($char, ['\'', SeekerInterface::EOL, SeekerInterface::COMMENT], true);
+                            return !\in_array($char, ['\'', StringStreamInterface::EOL, StringStreamInterface::COMMENT], true);
                         },
                     ),
                 ),
             );
 
-            if (str_ends_with($string, SeekerInterface::EOL)) {
-                $this->raiseException($seeker, 'Unexpected T_RETURN "\n", expected T_SINGLE_QUOTE "\'"');
+            if (str_ends_with($string, StringStreamInterface::EOL)) {
+                $this->raiseException($stream, 'Unexpected T_RETURN "\n", expected T_SINGLE_QUOTE "\'"');
             }
 
-            if (str_ends_with($string, SeekerInterface::COMMENT)) {
-                $this->raiseException($seeker, 'Unexpected T_COMMENT "#", expected T_SINGLE_QUOTE "\'"');
+            if (str_ends_with($string, StringStreamInterface::COMMENT)) {
+                $this->raiseException($stream, 'Unexpected T_COMMENT "#", expected T_SINGLE_QUOTE "\'"');
             }
 
             $tokenStream->addToken(

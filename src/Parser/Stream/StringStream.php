@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Parser\Seeker;
+namespace HypnoTox\Toml\Parser\Stream;
 
-final class Seeker implements SeekerInterface
+final class StringStream implements StringStreamInterface
 {
     private int $pointer = 0;
     private readonly int $inputLength;

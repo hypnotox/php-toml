@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Parser\Token;
+namespace HypnoTox\Toml\Parser\Stream;
+
+use HypnoTox\Toml\Parser\Token\TokenInterface;
 
 final class TokenStream implements TokenStreamInterface
 {
+    private int $pointer = 0;
+
     /**
      * @param list<TokenInterface> $tokens
      */
@@ -19,29 +23,26 @@ final class TokenStream implements TokenStreamInterface
         $this->tokens[] = $token;
     }
 
-    public function current(): TokenInterface|false
+    public function getPointer(): int
     {
-        return current($this->tokens);
+        return $this->pointer;
     }
 
-    public function next(): void
+    public function peek(): TokenInterface
     {
-        next($this->tokens);
+        return $this->tokens[$this->pointer];
     }
 
-    public function key(): int
+    public function consume(): TokenInterface
     {
-        return key($this->tokens);
+        ++$this->pointer;
+
+        return $this->tokens[$this->pointer - 1];
     }
 
-    public function valid(): bool
+    public function isEOF(): bool
     {
-        return (bool) $this->current();
-    }
-
-    public function rewind(): void
-    {
-        reset($this->tokens);
+        return $this->pointer >= count($this->tokens);
     }
 
     public function __toString()

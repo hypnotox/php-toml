@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Parser;
 
 use HypnoTox\Toml\Parser\Exception\SyntaxException;
-use HypnoTox\Toml\Parser\Seeker\SeekerFactoryInterface;
+use HypnoTox\Toml\Parser\Stream\StringStreamFactoryInterface;
+use HypnoTox\Toml\Parser\Stream\TokenStreamFactoryInterface;
+use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Parser\Token\TokenFactoryInterface;
-use HypnoTox\Toml\Parser\Token\TokenStreamFactoryInterface;
-use HypnoTox\Toml\Parser\Token\TokenStreamInterface;
 use HypnoTox\Toml\Parser\Tokenizer\BasicStringTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\CommentTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\DatetimeTokenizer;
@@ -32,7 +32,7 @@ final class Lexer implements LexerInterface
      * @param TokenizerInterface[]|null $tokenizer
      */
     public function __construct(
-        private SeekerFactoryInterface $seekerFactory,
+        private StringStreamFactoryInterface $stringStreamFactory,
         private TokenStreamFactoryInterface $tokenStreamFactory,
         private TokenFactoryInterface $tokenFactory,
         array $tokenizer = null,
@@ -61,26 +61,26 @@ final class Lexer implements LexerInterface
     public function tokenize(string $input): TokenStreamInterface
     {
         $tokenStream = $this->tokenStreamFactory->make();
-        $seeker = $this->seekerFactory->make($input);
+        $stream = $this->stringStreamFactory->make($input);
 
-        while (!$seeker->isEOF()) {
-            $lastPointer = $seeker->getPointer();
-            $seeker->consumeWhitespace();
+        while (!$stream->isEOF()) {
+            $lastPointer = $stream->getPointer();
+            $stream->consumeWhitespace();
 
             foreach ($this->tokenizer as $tokenizer) {
-                if ($tokenizer->tokenize($seeker, $tokenStream)) {
+                if ($tokenizer->tokenize($stream, $tokenStream)) {
                     continue 2;
                 }
             }
 
-            if ($seeker->getPointer() === $lastPointer) {
+            if ($stream->getPointer() === $lastPointer) {
                 throw new SyntaxException(
                     sprintf(
                         'SyntaxError: %s on line %d:%d: "%s"',
                         'Could not parse input',
-                        $seeker->getLineNumber(),
-                        $seeker->getLineOffset() + 1,
-                        $seeker->peekUntilEOL(),
+                        $stream->getLineNumber(),
+                        $stream->getLineOffset() + 1,
+                        $stream->peekUntilEOL(),
                     ),
                 );
             }

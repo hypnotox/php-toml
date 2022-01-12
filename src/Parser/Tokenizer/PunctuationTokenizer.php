@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\Tokenizer;
 
-use HypnoTox\Toml\Parser\Seeker\SeekerInterface;
-use HypnoTox\Toml\Parser\Token\TokenStreamInterface;
+use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
+use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Parser\Token\TokenType;
 
 final class PunctuationTokenizer extends AbstractTokenizer
 {
-    public function tokenize(SeekerInterface $seeker, TokenStreamInterface $tokenStream): bool
+    public function tokenize(StringStreamInterface $stream, TokenStreamInterface $tokenStream): bool
     {
-        $char = $seeker->peek();
+        $char = $stream->peek();
 
         if ('=' === $char) {
-            $lineNumber = $seeker->getLineNumber();
-            $lineOffset = $seeker->getLineOffset();
+            $lineNumber = $stream->getLineNumber();
+            $lineOffset = $stream->getLineOffset();
 
             $tokenStream->addToken(
                 $this->tokenFactory->make(
                     TokenType::T_EQUALS,
-                    $seeker->consume(),
+                    $stream->consume(),
                     $lineNumber,
                     $lineOffset,
                 )
@@ -31,13 +31,13 @@ final class PunctuationTokenizer extends AbstractTokenizer
         }
 
         if ('[' === $char) {
-            $lineNumber = $seeker->getLineNumber();
-            $lineOffset = $seeker->getLineOffset();
+            $lineNumber = $stream->getLineNumber();
+            $lineOffset = $stream->getLineOffset();
 
             $tokenStream->addToken(
                 $this->tokenFactory->make(
                     TokenType::T_BRACKET_OPEN,
-                    $seeker->consume(),
+                    $stream->consume(),
                     $lineNumber,
                     $lineOffset,
                 )
@@ -47,13 +47,13 @@ final class PunctuationTokenizer extends AbstractTokenizer
         }
 
         if (']' === $char) {
-            $lineNumber = $seeker->getLineNumber();
-            $lineOffset = $seeker->getLineOffset();
+            $lineNumber = $stream->getLineNumber();
+            $lineOffset = $stream->getLineOffset();
 
             $tokenStream->addToken(
                 $this->tokenFactory->make(
                     TokenType::T_BRACKET_CLOSE,
-                    $seeker->consume(),
+                    $stream->consume(),
                     $lineNumber,
                     $lineOffset,
                 )
@@ -66,13 +66,13 @@ final class PunctuationTokenizer extends AbstractTokenizer
             return false;
         }
 
-        $lineNumber = $seeker->getLineNumber();
-        $lineOffset = $seeker->getLineOffset();
+        $lineNumber = $stream->getLineNumber();
+        $lineOffset = $stream->getLineOffset();
 
         $tokenStream->addToken(
             $this->tokenFactory->make(
                 TokenType::T_PUNCTUATION,
-                $seeker->consume(),
+                $stream->consume(),
                 $lineNumber,
                 $lineOffset,
             )
