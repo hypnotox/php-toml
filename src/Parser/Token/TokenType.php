@@ -14,6 +14,8 @@ enum TokenType
     case T_BRACKET_CLOSE;
 
     // Values
+    case T_INTEGER;
+    case T_FLOAT;
     case T_BASIC_STRING;
     case T_QUOTED_STRING;
     case T_LITERAL_STRING;

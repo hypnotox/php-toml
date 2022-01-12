@@ -14,6 +14,8 @@ use HypnoTox\Toml\Parser\Tokenizer\CommentTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\DatetimeTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\DottedStringTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\EndOfLineTokenizer;
+use HypnoTox\Toml\Parser\Tokenizer\FloatTokenizer;
+use HypnoTox\Toml\Parser\Tokenizer\IntegerTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\LiteralStringTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\PunctuationTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\QuotedStringTokenizer;
@@ -43,6 +45,8 @@ final class Lexer implements LexerInterface
                 new EndOfLineTokenizer($this->tokenFactory),
                 new PunctuationTokenizer($this->tokenFactory),
                 new DatetimeTokenizer($this->tokenFactory),
+                new IntegerTokenizer($this->tokenFactory),
+                new FloatTokenizer($this->tokenFactory),
                 new QuotedStringTokenizer($this->tokenFactory),
                 new LiteralStringTokenizer($this->tokenFactory),
                 new DottedStringTokenizer($this->tokenFactory),
