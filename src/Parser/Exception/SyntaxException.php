@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\Exception;
 
-final class SyntaxException extends \Exception
+final class SyntaxException extends \Exception implements ParserExceptionInterface
 {
 }
