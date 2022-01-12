@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Parser\Stream;
 
 use HypnoTox\Toml\Parser\Token\TokenInterface;
+use HypnoTox\Toml\Parser\Token\TokenType;
 
 final class TokenStream implements TokenStreamInterface
 {
@@ -28,9 +29,9 @@ final class TokenStream implements TokenStreamInterface
         return $this->pointer;
     }
 
-    public function peek(): TokenInterface
+    public function peek(int $n = 1): TokenInterface
     {
-        return $this->tokens[$this->pointer];
+        return $this->tokens[$this->pointer + $n];
     }
 
     public function consume(): TokenInterface
@@ -38,6 +39,13 @@ final class TokenStream implements TokenStreamInterface
         ++$this->pointer;
 
         return $this->tokens[$this->pointer - 1];
+    }
+
+    public function consumeNewlines(): void
+    {
+        while ($this->peek()->getType() === TokenType::T_RETURN) {
+            $this->consume();
+        }
     }
 
     public function isEOF(): bool

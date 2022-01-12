@@ -13,9 +13,11 @@ interface TokenStreamInterface extends StreamInterface, \Stringable
      */
     public function __construct(array $tokens);
 
-    public function peek(): TokenInterface;
+    public function peek(int $n = 1): TokenInterface;
 
     public function consume(): TokenInterface;
+
+    public function consumeNewlines(): void;
 
     public function addToken(TokenInterface $token): void;
 }

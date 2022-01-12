@@ -5,29 +5,130 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Parser;
 
 use HypnoTox\Toml\Builder\BuilderInterface;
-use HypnoTox\Toml\Parser\Exception\ParserException;
+use HypnoTox\Toml\Parser\Exception\TomlException;
+use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
+use HypnoTox\Toml\Parser\Token\TokenInterface;
+use HypnoTox\Toml\Parser\Token\TokenType;
+use HypnoTox\Toml\TomlFactoryInterface;
 use HypnoTox\Toml\TomlInterface;
 
 final class Parser implements ParserInterface
 {
+    private const NEWLINE_TOKEN = [
+        TokenType::T_RETURN,
+        TokenType::T_HASHTAG,
+        ...self::KEY_TOKEN,
+    ];
+
+    private const KEY_TOKEN = [
+        TokenType::T_BASIC_STRING,
+        TokenType::T_DOTTED_STRING,
+        TokenType::T_LITERAL_STRING,
+        TokenType::T_QUOTED_STRING,
+        TokenType::T_INTEGER,
+        TokenType::T_FLOAT,
+        TokenType::T_BRACKET_OPEN,
+    ];
+
+    private const VALUE_TOKEN = [
+        TokenType::T_BASIC_STRING,
+        TokenType::T_DOTTED_STRING,
+        TokenType::T_LITERAL_STRING,
+        TokenType::T_QUOTED_STRING,
+        TokenType::T_INTEGER,
+        TokenType::T_FLOAT,
+        TokenType::T_BRACKET_OPEN,
+        TokenType::T_BOOLEAN,
+        TokenType::T_DATETIME,
+        TokenType::T_DATE,
+        TokenType::T_TIME,
+    ];
+
     public function __construct(
         private LexerInterface $lexer,
-        private BuilderInterface $builder,
+        private TomlFactoryInterface $tomlFactory,
     ) {
     }
 
     /**
-     * @throws ParserException
+     * @throws TomlException
      */
     public function parse(string $input): TomlInterface
     {
         if (!mb_check_encoding($input, 'UTF-8')) {
-            throw new ParserException('TOML must be UTF-8.');
+            throw new TomlException('TOML must be UTF-8.');
         }
 
         $input = str_replace("\r\n", "\n", $input);
-        $this->lexer->tokenize($input);
+        $stream = $this->lexer->tokenize($input);
+        $toml = $this->tomlFactory->make();
+        $lastPointer = $stream->getPointer();
 
-        return $this->builder->build();
+        dump((string)$stream);
+
+        while (!$stream->isEOF()) {
+            $token = $stream->peek();
+
+            if (!in_array($token->getType(), self::NEWLINE_TOKEN, true)) {
+                $this->raiseUnexpectedTokenException($token, self::NEWLINE_TOKEN);
+            }
+
+            if ($token->getType() === TokenType::T_RETURN) {
+                $stream->consume();
+                continue;
+            }
+
+            if (in_array($token->getType(), self::KEY_TOKEN, true)) {
+
+
+
+
+                continue;
+            }
+
+            if ($stream->getPointer() === $lastPointer) {
+                throw new TomlException(
+                    sprintf(
+                        'SyntaxError: %s on line %d:%d',
+                        'Could not parse input',
+                        $token->getLine(),
+                        $token->getOffset() + 1,
+                    ),
+                );
+            }
+        }
+
+        return $toml;
+    }
+
+    private function parseKeyValuePair(TokenStreamInterface $stream, TomlInterface $toml): TomlInterface
+    {
+        $key = $stream->consume();
+        $equals = $stream->consume();
+
+        if ($equals->getType() !== TokenType::T_EQUALS) {
+            $this->raiseUnexpectedTokenException($equals, [TokenType::T_EQUALS]);
+        }
+
+        return $toml;
+    }
+
+    /**
+     * @param list<TokenType> $expected
+     *
+     * @throws TomlException
+     */
+    private function raiseUnexpectedTokenException(TokenInterface $actual, array $expected): never
+    {
+        throw new TomlException(
+            sprintf(
+                'SyntaxError: Unexpected %s on line %d:%d, expected %s%s.',
+                $actual->getType()->name,
+                $actual->getLine(),
+                $actual->getOffset() + 1,
+                count($expected) > 1 ? 'one of ' : '',
+                implode(', ', array_map(static fn (TokenType $tokenType) => $tokenType->name, $expected)),
+            ),
+        );
     }
 }

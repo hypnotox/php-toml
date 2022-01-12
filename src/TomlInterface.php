@@ -9,9 +9,11 @@ namespace HypnoTox\Toml;
  */
 interface TomlInterface
 {
-    // TODO: Create interface for TOML objects
+    public function __construct(array $data = []);
 
-    public function toArray(): array;
+    public function get(string $key): mixed;
+
+    public function set(string $key, mixed $value): TomlInterface;
 
     public function toJson(): string;
 }

@@ -9,9 +9,19 @@ namespace HypnoTox\Toml;
  */
 final class Toml implements TomlInterface
 {
-    public function toArray(): array
+    public function __construct(
+        private readonly array $data = [],
+    ) {
+    }
+
+    public function get(string $key): mixed
     {
-        return [];
+        // TODO: Implement get() method.
+    }
+
+    public function set(string $key, mixed $value): self
+    {
+        // TODO: Implement set() method.
     }
 
     /**
@@ -20,6 +30,6 @@ final class Toml implements TomlInterface
     public function toJson(): string
     {
         // TODO: Implement JSON string representation according to TOML test suite
-        return json_encode($this->toArray(), \JSON_THROW_ON_ERROR);
+        return json_encode($this->data, \JSON_THROW_ON_ERROR);
     }
 }
