@@ -62,38 +62,6 @@ final class PunctuationTokenizer extends AbstractTokenizer
             return true;
         }
 
-        if ('"' === $char) {
-            $lineNumber = $stream->getLineNumber();
-            $lineOffset = $stream->getLineOffset();
-
-            $tokenStream->addToken(
-                $this->tokenFactory->make(
-                    TokenType::T_DOUBLE_QUOTE,
-                    $stream->consume(),
-                    $lineNumber,
-                    $lineOffset,
-                )
-            );
-
-            return true;
-        }
-
-        if ('\'' === $char) {
-            $lineNumber = $stream->getLineNumber();
-            $lineOffset = $stream->getLineOffset();
-
-            $tokenStream->addToken(
-                $this->tokenFactory->make(
-                    TokenType::T_SINGLE_QUOTE,
-                    $stream->consume(),
-                    $lineNumber,
-                    $lineOffset,
-                )
-            );
-
-            return true;
-        }
-
         if (',' === $char) {
             $lineNumber = $stream->getLineNumber();
             $lineOffset = $stream->getLineOffset();
@@ -101,22 +69,6 @@ final class PunctuationTokenizer extends AbstractTokenizer
             $tokenStream->addToken(
                 $this->tokenFactory->make(
                     TokenType::T_COMMA,
-                    $stream->consume(),
-                    $lineNumber,
-                    $lineOffset,
-                )
-            );
-
-            return true;
-        }
-
-        if ('.' === $char) {
-            $lineNumber = $stream->getLineNumber();
-            $lineOffset = $stream->getLineOffset();
-
-            $tokenStream->addToken(
-                $this->tokenFactory->make(
-                    TokenType::T_DOT,
                     $stream->consume(),
                     $lineNumber,
                     $lineOffset,

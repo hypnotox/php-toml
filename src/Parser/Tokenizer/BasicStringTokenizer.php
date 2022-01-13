@@ -8,7 +8,7 @@ use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
 use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Parser\Token\TokenType;
 
-final class QuotedStringTokenizer extends AbstractTokenizer
+final class BasicStringTokenizer extends AbstractTokenizer
 {
     public function tokenize(StringStreamInterface $stream, TokenStreamInterface $tokenStream): bool
     {
@@ -36,13 +36,9 @@ final class QuotedStringTokenizer extends AbstractTokenizer
                 $this->raiseException($stream, 'Unexpected T_RETURN "\n", expected T_DOUBLE_QUOTE """');
             }
 
-            if (str_ends_with($string, StringStreamInterface::COMMENT)) {
-                $this->raiseException($stream, 'Unexpected T_COMMENT "#", expected T_DOUBLE_QUOTE """');
-            }
-
             $tokenStream->addToken(
                 $this->tokenFactory->make(
-                    TokenType::T_QUOTED_STRING,
+                    TokenType::T_BASIC_STRING,
                     $string,
                     $lineNumber,
                     $lineOffset,

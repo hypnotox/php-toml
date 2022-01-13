@@ -26,7 +26,7 @@ final class LiteralStringTokenizer extends AbstractTokenizer
 
                             $lastChar = $char;
 
-                            return !\in_array($char, ['\'', StringStreamInterface::EOL, StringStreamInterface::COMMENT], true);
+                            return !\in_array($char, ['\'', StringStreamInterface::EOL], true);
                         },
                     ),
                 ),
@@ -34,10 +34,6 @@ final class LiteralStringTokenizer extends AbstractTokenizer
 
             if (str_ends_with($string, StringStreamInterface::EOL)) {
                 $this->raiseException($stream, 'Unexpected T_RETURN "\n", expected T_SINGLE_QUOTE "\'"');
-            }
-
-            if (str_ends_with($string, StringStreamInterface::COMMENT)) {
-                $this->raiseException($stream, 'Unexpected T_COMMENT "#", expected T_SINGLE_QUOTE "\'"');
             }
 
             $tokenStream->addToken(

@@ -8,14 +8,15 @@ enum TokenType
 {
     // Characters
     case T_RETURN;
-    case T_PUNCTUATION;
     case T_EQUALS;
     case T_BRACKET_OPEN;
     case T_BRACKET_CLOSE;
-    case T_SINGLE_QUOTE;
-    case T_DOUBLE_QUOTE;
     case T_COMMA;
-    case T_DOT;
+
+    // Structures
+    case T_KEY;
+    case T_BASIC_STRING;
+    case T_LITERAL_STRING;
 
     // Values
     case T_INTEGER;
