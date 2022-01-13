@@ -6,11 +6,29 @@
 [![Packagist PHP Version Support](https://badgen.net/packagist/php/hypnotox/toml)](https://packagist.org/packages/hypnotox/toml)
 [![GitHub](https://badgen.net/packagist/license/hypnotox/toml)](/LICENSE.md)
 
-A PHP package implementing a TOML file loader.
+A PHP package implementing a TOML file loader with immutable object representation.
 
-This is just a personal project. It will follow semantic versioning and will be stable, but don't expect constant development, especially when it is declared feature complete.
+This package strives to support the TOML v1.0.0 specification.
 
 PRs are welcome.
+
+## Features
+- [ ] TOML Specification v1.0.0
+  - [ ] Tables
+  - [ ] Inline Tables
+  - [ ] Array of Tables
+  - [ ] Key/Value Pairs
+  - [ ] Data Types
+    - [ ] String
+    - [ ] Integer
+    - [ ] Float
+    - [ ] Boolean
+    - [ ] Offset Date-Time
+    - [ ] Local Date-Time
+    - [ ] Local Date
+    - [ ] Local Time
+    - [ ] Array
+    - [ ] Inline Table
 
 ## Installation
 
