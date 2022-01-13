@@ -8,13 +8,13 @@ use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
 use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Parser\Token\TokenType;
 
-final class BasicStringTokenizer extends AbstractTokenizer
+final class StringTokenizer extends AbstractTokenizer
 {
     public function tokenize(StringStreamInterface $stream, TokenStreamInterface $tokenStream): bool
     {
         $lineNumber = $stream->getLineNumber();
         $lineOffset = $stream->getLineOffset();
-        $string = $stream->peekUntilOneOf(['=', ',', '[', ']', StringStreamInterface::COMMENT, StringStreamInterface::EOL, ...StringStreamInterface::WHITESPACE]);
+        $string = $stream->peekUntilOneOf(['=', ',', '[', ']', '\'', '"', StringStreamInterface::COMMENT, StringStreamInterface::EOL, ...StringStreamInterface::WHITESPACE]);
 
         if ('' === trim($string)) {
             return false;
@@ -23,7 +23,7 @@ final class BasicStringTokenizer extends AbstractTokenizer
         $stream->consume(\strlen($string));
         $tokenStream->addToken(
             $this->tokenFactory->make(
-                TokenType::T_BASIC_STRING,
+                TokenType::T_STRING,
                 trim($string),
                 $lineNumber,
                 $lineOffset,

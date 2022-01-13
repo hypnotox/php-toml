@@ -13,17 +13,7 @@ final class CommentTokenizer extends AbstractTokenizer
     public function tokenize(StringStreamInterface $stream, TokenStreamInterface $tokenStream): bool
     {
         if (StringStreamInterface::COMMENT === $stream->peek()) {
-            $lineNumber = $stream->getLineNumber();
-            $lineOffset = $stream->getLineOffset();
-
-            $tokenStream->addToken(
-                $this->tokenFactory->make(
-                    TokenType::T_BASIC_STRING,
-                    trim($stream->consume(\strlen($stream->peekUntilEOL()))),
-                    $lineNumber,
-                    $lineOffset,
-                )
-            );
+            $stream->consume(\strlen($stream->peekUntilEOL()));
 
             return true;
         }

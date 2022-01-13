@@ -9,7 +9,7 @@ use HypnoTox\Toml\Parser\Stream\StringStreamFactoryInterface;
 use HypnoTox\Toml\Parser\Stream\TokenStreamFactoryInterface;
 use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Parser\Token\TokenFactoryInterface;
-use HypnoTox\Toml\Parser\Tokenizer\BasicStringTokenizer;
+use HypnoTox\Toml\Parser\Tokenizer\StringTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\CommentTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\DatetimeTokenizer;
 use HypnoTox\Toml\Parser\Tokenizer\DottedStringTokenizer;
@@ -47,10 +47,7 @@ final class Lexer implements LexerInterface
                 new DatetimeTokenizer($this->tokenFactory),
                 new IntegerTokenizer($this->tokenFactory),
                 new FloatTokenizer($this->tokenFactory),
-                new QuotedStringTokenizer($this->tokenFactory),
-                new LiteralStringTokenizer($this->tokenFactory),
-                new DottedStringTokenizer($this->tokenFactory),
-                new BasicStringTokenizer($this->tokenFactory),
+                new StringTokenizer($this->tokenFactory),
             ];
         }
     }

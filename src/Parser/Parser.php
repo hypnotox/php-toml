@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser;
 
-use HypnoTox\Toml\Builder\BuilderInterface;
 use HypnoTox\Toml\Parser\Exception\TomlException;
 use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Parser\Token\TokenInterface;
@@ -16,25 +15,18 @@ final class Parser implements ParserInterface
 {
     private const NEWLINE_TOKEN = [
         TokenType::T_RETURN,
-        TokenType::T_HASHTAG,
         ...self::KEY_TOKEN,
     ];
 
     private const KEY_TOKEN = [
-        TokenType::T_BASIC_STRING,
-        TokenType::T_DOTTED_STRING,
-        TokenType::T_LITERAL_STRING,
-        TokenType::T_QUOTED_STRING,
+        TokenType::T_STRING,
         TokenType::T_INTEGER,
         TokenType::T_FLOAT,
         TokenType::T_BRACKET_OPEN,
     ];
 
     private const VALUE_TOKEN = [
-        TokenType::T_BASIC_STRING,
-        TokenType::T_DOTTED_STRING,
-        TokenType::T_LITERAL_STRING,
-        TokenType::T_QUOTED_STRING,
+        TokenType::T_STRING,
         TokenType::T_INTEGER,
         TokenType::T_FLOAT,
         TokenType::T_BRACKET_OPEN,
@@ -64,8 +56,6 @@ final class Parser implements ParserInterface
         $toml = $this->tomlFactory->make();
         $lastPointer = $stream->getPointer();
 
-        dump((string)$stream);
-
         while (!$stream->isEOF()) {
             $token = $stream->peek();
 
@@ -79,10 +69,7 @@ final class Parser implements ParserInterface
             }
 
             if (in_array($token->getType(), self::KEY_TOKEN, true)) {
-
-
-
-
+                $toml = $this->parseKeyValuePair($stream, $toml);
                 continue;
             }
 
@@ -109,6 +96,9 @@ final class Parser implements ParserInterface
         if ($equals->getType() !== TokenType::T_EQUALS) {
             $this->raiseUnexpectedTokenException($equals, [TokenType::T_EQUALS]);
         }
+
+        // TODO: Validate and consume value tokens.
+        // TODO: Add key value pair to TOML object.
 
         return $toml;
     }

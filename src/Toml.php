@@ -19,9 +19,13 @@ final class Toml implements TomlInterface
         // TODO: Implement get() method.
     }
 
-    public function set(string $key, mixed $value): self
+    public function set(string $key, mixed $value): Toml
     {
-        // TODO: Implement set() method.
+        $data = $this->data;
+
+        // TODO: Evaluate key and set value.
+
+        return new Toml($data);
     }
 
     /**

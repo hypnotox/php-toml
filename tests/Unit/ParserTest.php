@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use HypnoTox\Toml\Builder\Builder;
 use HypnoTox\Toml\Parser\Exception\TomlExceptionInterface;
 use HypnoTox\Toml\Parser\Lexer;
 use HypnoTox\Toml\Parser\Parser;
 use HypnoTox\Toml\Parser\Stream\StringStreamFactory;
 use HypnoTox\Toml\Parser\Stream\TokenStreamFactory;
 use HypnoTox\Toml\Parser\Token\TokenFactory;
+use HypnoTox\Toml\TomlFactory;
 
 final class ParserTest extends BaseTest
 {
@@ -39,7 +39,7 @@ final class ParserTest extends BaseTest
                 new TokenStreamFactory(),
                 new TokenFactory(),
             ),
-            new Builder(),
+            new TomlFactory(),
         );
     }
 
