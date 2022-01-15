@@ -15,7 +15,7 @@ final class KeyTokenizer extends AbstractTokenizer
         if ($stream->getLineOffset() === 0) {
             $lineNumber = $stream->getLineNumber();
             $lineOffset = $stream->getLineOffset();
-            $string = $stream->peekUntilOneOf(['=', StringStreamInterface::EOL, StringStreamInterface::COMMENT]);
+            $string = $stream->peekUntilOneOf(['=', ',', StringStreamInterface::EOL, StringStreamInterface::COMMENT]);
             $stream->consume(strlen($string));
 
             if ($stream->peek() === StringStreamInterface::EOL) {

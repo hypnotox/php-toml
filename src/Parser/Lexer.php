@@ -42,11 +42,11 @@ final class Lexer implements LexerInterface
                 new CommentTokenizer($this->tokenFactory),
                 new EndOfLineTokenizer($this->tokenFactory),
                 new PunctuationTokenizer($this->tokenFactory),
-                new KeyTokenizer($this->tokenFactory),
                 new DatetimeTokenizer($this->tokenFactory),
                 new IntegerTokenizer($this->tokenFactory),
                 new FloatTokenizer($this->tokenFactory),
                 new BasicStringTokenizer($this->tokenFactory),
+                new KeyTokenizer($this->tokenFactory),
             ];
         }
     }
