@@ -101,11 +101,6 @@ final class StringStream implements StringStreamInterface
         return $buffer;
     }
 
-    public function peekUntilWhitespace(): string
-    {
-        return $this->peekUntilOneOf([self::EOL, ...self::WHITESPACE]);
-    }
-
     public function peekUntilEOS(): string
     {
         return $this->peekUntilOneOf([self::EOL, '#']);

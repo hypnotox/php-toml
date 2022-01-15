@@ -36,8 +36,6 @@ interface StringStreamInterface extends StreamInterface
 
     public function peekUntilCallback(callable $callback): string;
 
-    public function peekUntilWhitespace(): string;
-
     public function peekUntilEOS(): string;
 
     public function peekUntilEOL(): string;
