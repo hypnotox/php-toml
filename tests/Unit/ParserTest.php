@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use HypnoTox\Toml\Builder\TomlBuilder;
 use HypnoTox\Toml\Parser\Exception\TomlExceptionInterface;
 use HypnoTox\Toml\Parser\Lexer;
 use HypnoTox\Toml\Parser\Parser;
@@ -39,7 +40,9 @@ final class ParserTest extends BaseTest
                 new TokenStreamFactory(),
                 new TokenFactory(),
             ),
-            new TomlFactory(),
+            new TomlBuilder(
+                new TomlFactory(),
+            ),
         );
     }
 
@@ -47,9 +50,11 @@ final class ParserTest extends BaseTest
     {
         /** @var array $values */
         foreach ($this->generateFromDirectory(__DIR__.'/../Fixtures/valid') as $values) {
+            dump($values);
             array_unshift($values, $this->getParser());
 
             yield $values;
+            break;
         }
     }
 
