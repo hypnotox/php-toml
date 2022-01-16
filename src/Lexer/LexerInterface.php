@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Parser;
+namespace HypnoTox\Toml\Lexer;
 
-use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
+use HypnoTox\Toml\Lexer\Tokenizer\Stream\TokenStreamInterface;
 
 interface LexerInterface
 {

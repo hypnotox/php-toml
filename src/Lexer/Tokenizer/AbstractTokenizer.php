@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Parser\Tokenizer;
+namespace HypnoTox\Toml\Lexer\Tokenizer;
 
+use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenFactoryInterface;
 use HypnoTox\Toml\Parser\Exception\SyntaxException;
-use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
-use HypnoTox\Toml\Parser\Token\TokenFactoryInterface;
+use HypnoTox\Toml\Stream\StringStreamInterface;
 
 abstract class AbstractTokenizer implements TokenizerInterface
 {

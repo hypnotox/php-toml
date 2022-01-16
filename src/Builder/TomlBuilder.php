@@ -25,7 +25,6 @@ final class TomlBuilder implements TomlBuilderInterface
     public function set(string $key, mixed $value): TomlBuilderInterface
     {
         // TODO: Set according to key
-        dd($key, $value);
 
         return $this;
     }

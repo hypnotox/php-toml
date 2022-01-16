@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Parser\TokenParser\Expression;
 
 use HypnoTox\Toml\Builder\TomlBuilderInterface;
-use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
-use HypnoTox\Toml\Parser\Token\TokenInterface;
-use HypnoTox\Toml\Parser\Token\TokenType;
+use HypnoTox\Toml\Lexer\Tokenizer\Stream\TokenStreamInterface;
+use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenInterface;
+use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenType;
 use HypnoTox\Toml\Parser\TokenParser\AbstractTokenParser;
 
 final class NewlineParser extends AbstractTokenParser implements ExpressionParserInterface

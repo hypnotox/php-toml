@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Parser\Stream;
+namespace HypnoTox\Toml\Lexer\Tokenizer\Stream;
 
 use function count;
-use HypnoTox\Toml\Parser\Token\TokenInterface;
-use HypnoTox\Toml\Parser\Token\TokenType;
+use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenInterface;
+use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenType;
 
 final class TokenStream implements TokenStreamInterface
 {
     private int $pointer = 0;
 
     /**
-     * @param list<TokenInterface> $tokens
+     * @param TokenInterface[] $tokens
      */
     public function __construct(
         private array $tokens = [],

@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Parser;
+namespace HypnoTox\Toml\Lexer;
 
+use HypnoTox\Toml\Lexer\Tokenizer\BasicStringTokenizer;
+use HypnoTox\Toml\Lexer\Tokenizer\CommentTokenizer;
+use HypnoTox\Toml\Lexer\Tokenizer\DatetimeTokenizer;
+use HypnoTox\Toml\Lexer\Tokenizer\EndOfLineTokenizer;
+use HypnoTox\Toml\Lexer\Tokenizer\FloatTokenizer;
+use HypnoTox\Toml\Lexer\Tokenizer\IntegerTokenizer;
+use HypnoTox\Toml\Lexer\Tokenizer\KeyTokenizer;
+use HypnoTox\Toml\Lexer\Tokenizer\PunctuationTokenizer;
+use HypnoTox\Toml\Lexer\Tokenizer\Stream\TokenStreamFactoryInterface;
+use HypnoTox\Toml\Lexer\Tokenizer\Stream\TokenStreamInterface;
+use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenFactoryInterface;
+use HypnoTox\Toml\Lexer\Tokenizer\TokenizerInterface;
 use HypnoTox\Toml\Parser\Exception\SyntaxException;
-use HypnoTox\Toml\Parser\Stream\StringStreamFactoryInterface;
-use HypnoTox\Toml\Parser\Stream\TokenStreamFactoryInterface;
-use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
-use HypnoTox\Toml\Parser\Token\TokenFactoryInterface;
-use HypnoTox\Toml\Parser\Tokenizer\BasicStringTokenizer;
-use HypnoTox\Toml\Parser\Tokenizer\CommentTokenizer;
-use HypnoTox\Toml\Parser\Tokenizer\DatetimeTokenizer;
-use HypnoTox\Toml\Parser\Tokenizer\EndOfLineTokenizer;
-use HypnoTox\Toml\Parser\Tokenizer\FloatTokenizer;
-use HypnoTox\Toml\Parser\Tokenizer\IntegerTokenizer;
-use HypnoTox\Toml\Parser\Tokenizer\KeyTokenizer;
-use HypnoTox\Toml\Parser\Tokenizer\PunctuationTokenizer;
-use HypnoTox\Toml\Parser\Tokenizer\TokenizerInterface;
+use HypnoTox\Toml\Stream\StringStreamFactoryInterface;
 
 final class Lexer implements LexerInterface
 {

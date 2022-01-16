@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Parser;
 
 use HypnoTox\Toml\Builder\TomlBuilderInterface;
+use HypnoTox\Toml\Lexer\LexerInterface;
 use HypnoTox\Toml\Parser\Exception\EncodingException;
 use HypnoTox\Toml\Parser\Exception\TomlExceptionInterface;
 use HypnoTox\Toml\Parser\Exception\UnableToParseInputException;

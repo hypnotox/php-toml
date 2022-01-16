@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Parser\TokenParser;
 
 use function count;
+use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenInterface;
+use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenType;
 use HypnoTox\Toml\Parser\Exception\UnexpectedTokenException;
-use HypnoTox\Toml\Parser\Token\TokenInterface;
-use HypnoTox\Toml\Parser\Token\TokenType;
 use function in_array;
 
 abstract class AbstractTokenParser implements TokenParserInterface

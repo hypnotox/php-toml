@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use HypnoTox\Toml\Builder\Builder;
-use HypnoTox\Toml\Parser\Lexer;
+use HypnoTox\Toml\Lexer\Lexer;
+use HypnoTox\Toml\Lexer\Tokenizer\Stream\TokenStreamFactory;
+use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenFactory;
 use HypnoTox\Toml\Parser\Parser;
-use HypnoTox\Toml\Parser\Stream\StringStreamFactory;
-use HypnoTox\Toml\Parser\Stream\TokenStreamFactory;
-use HypnoTox\Toml\Parser\Token\TokenFactory;
+use HypnoTox\Toml\Stream\StringStreamFactory;
 
 include 'vendor/autoload.php';
 

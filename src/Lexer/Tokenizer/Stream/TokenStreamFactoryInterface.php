@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Parser\Stream;
+namespace HypnoTox\Toml\Lexer\Tokenizer\Stream;
 
 interface TokenStreamFactoryInterface
 {

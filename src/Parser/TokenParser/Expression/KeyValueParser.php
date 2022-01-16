@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Parser\TokenParser\Expression;
 
 use HypnoTox\Toml\Builder\TomlBuilderInterface;
+use HypnoTox\Toml\Lexer\Tokenizer\Stream\TokenStreamInterface;
+use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenInterface;
+use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenType;
 use HypnoTox\Toml\Parser\ParserInterface;
-use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
-use HypnoTox\Toml\Parser\Token\TokenInterface;
-use HypnoTox\Toml\Parser\Token\TokenType;
 use HypnoTox\Toml\Parser\TokenParser\AbstractTokenParser;
 use HypnoTox\Toml\Parser\TokenParser\Value\BasicStringParser;
 use HypnoTox\Toml\Parser\TokenParser\Value\LiteralStringParser;
@@ -59,8 +59,6 @@ final class KeyValueParser extends AbstractTokenParser implements ExpressionPars
                 $value = $parser->parse($stream);
             }
         }
-
-        dd($value);
 
         $builder->set($key->getValue(), $value);
     }

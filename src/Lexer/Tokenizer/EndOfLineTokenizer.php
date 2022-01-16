@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Parser\Tokenizer;
+namespace HypnoTox\Toml\Lexer\Tokenizer;
 
-use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
-use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
-use HypnoTox\Toml\Parser\Token\TokenType;
+use HypnoTox\Toml\Lexer\Tokenizer\Stream\TokenStreamInterface;
+use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenType;
+use HypnoTox\Toml\Stream\StringStreamInterface;
 
 final class EndOfLineTokenizer extends AbstractTokenizer
 {

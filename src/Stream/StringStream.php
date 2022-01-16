@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Parser\Stream;
+namespace HypnoTox\Toml\Stream;
 
 use function in_array;
 use function strlen;

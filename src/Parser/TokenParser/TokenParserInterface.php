@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\TokenParser;
 
-use HypnoTox\Toml\Parser\Token\TokenInterface;
+use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenInterface;
 
 interface TokenParserInterface
 {

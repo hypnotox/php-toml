@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Parser\Token;
+namespace HypnoTox\Toml\Lexer\Tokenizer\Token;
 
 use function strlen;
 

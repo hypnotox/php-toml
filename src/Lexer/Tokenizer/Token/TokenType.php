@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Parser\Token;
+namespace HypnoTox\Toml\Lexer\Tokenizer\Token;
+
+use const T_RETURN;
+use const T_STRING;
 
 enum TokenType
 {
@@ -12,12 +15,10 @@ enum TokenType
     case T_BRACKET_OPEN;
     case T_BRACKET_CLOSE;
     case T_COMMA;
-
     // Structures
     case T_KEY;
     case T_BASIC_STRING;
     case T_LITERAL_STRING;
-
     // Values
     case T_INTEGER;
     case T_FLOAT;

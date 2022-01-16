@@ -20,6 +20,7 @@ final class Toml implements TomlInterface
     public function get(string $key): mixed
     {
         // TODO: Implement get() method.
+        return null;
     }
 
     public function set(string $key, mixed $value): self

@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Parser\Tokenizer;
+namespace HypnoTox\Toml\Lexer\Tokenizer;
 
-use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
-use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
-use HypnoTox\Toml\Parser\Token\TokenType;
+use HypnoTox\Toml\Lexer\Tokenizer\Stream\TokenStreamInterface;
+use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenType;
+use HypnoTox\Toml\Stream\StringStreamInterface;
+use function HypnoTox\Toml\Tokenizer\str_contains;
 use function strlen;
 
-final class DottedStringTokenizer extends AbstractTokenizer
+final class IntegerTokenizer extends AbstractTokenizer
 {
     public function tokenize(StringStreamInterface $stream, TokenStreamInterface $tokenStream): bool
     {
@@ -17,14 +18,14 @@ final class DottedStringTokenizer extends AbstractTokenizer
         $lineOffset = $stream->getLineOffset();
         $string = $stream->peekUntilOneOf(['=', ',', '[', ']', StringStreamInterface::COMMENT, StringStreamInterface::EOL, ...StringStreamInterface::WHITESPACE]);
 
-        if (!str_contains($string, '.')) {
+        if (str_contains($string, '.') || !is_numeric(trim($string))) {
             return false;
         }
 
         $stream->consume(strlen($string));
         $tokenStream->addToken(
             $this->tokenFactory->make(
-                TokenType::T_DOTTED_STRING,
+                TokenType::T_INTEGER,
                 trim($string),
                 $lineNumber,
                 $lineOffset,
