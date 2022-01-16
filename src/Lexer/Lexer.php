@@ -9,13 +9,8 @@ use HypnoTox\Toml\Lexer\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Lexer\Token\TokenFactoryInterface;
 use HypnoTox\Toml\Lexer\Tokenizer\CommentTokenizer;
 use HypnoTox\Toml\Lexer\Tokenizer\EndOfLineTokenizer;
-use HypnoTox\Toml\Lexer\Tokenizer\KeyTokenizer;
-use HypnoTox\Toml\Lexer\Tokenizer\PunctuationTokenizer;
+use HypnoTox\Toml\Lexer\Tokenizer\KeyValueTokenizer;
 use HypnoTox\Toml\Lexer\Tokenizer\TokenizerInterface;
-use HypnoTox\Toml\Lexer\Tokenizer\Value\BasicStringTokenizer;
-use HypnoTox\Toml\Lexer\Tokenizer\Value\DatetimeTokenizer;
-use HypnoTox\Toml\Lexer\Tokenizer\Value\FloatTokenizer;
-use HypnoTox\Toml\Lexer\Tokenizer\Value\IntegerTokenizer;
 use HypnoTox\Toml\Parser\Exception\SyntaxException;
 use HypnoTox\Toml\Stream\StringStreamFactoryInterface;
 
@@ -41,12 +36,7 @@ final class Lexer implements LexerInterface
             $this->tokenizer = [
                 new CommentTokenizer($this->tokenFactory),
                 new EndOfLineTokenizer($this->tokenFactory),
-                new PunctuationTokenizer($this->tokenFactory),
-                new DatetimeTokenizer($this->tokenFactory),
-                new IntegerTokenizer($this->tokenFactory),
-                new FloatTokenizer($this->tokenFactory),
-                new BasicStringTokenizer($this->tokenFactory),
-                new KeyTokenizer($this->tokenFactory),
+                new KeyValueTokenizer($this->tokenFactory, $this->stringStreamFactory),
             ];
         }
     }

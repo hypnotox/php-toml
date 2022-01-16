@@ -12,6 +12,8 @@ interface StringStreamInterface extends StreamInterface
 
     public function __construct(string $input, int $lineNumber = 1, int $lineOffset = 0);
 
+    public function getInputLength(): int;
+
     public function getPointer(): int;
 
     public function getLineNumber(): int;
@@ -25,16 +27,16 @@ interface StringStreamInterface extends StreamInterface
      */
     public function peek(int $n = 1): string;
 
-    public function peekUntil(string $search): string;
+    public function peekUntil(string $search, bool $inclusive = false): string;
 
     /**
      * @param string[] $search
      */
-    public function peekUntilOneOf(array $search): string;
+    public function peekUntilOneOf(array $search, bool $inclusive = false): string;
 
-    public function peekUntilNotOneOf(array $search): string;
+    public function peekUntilNotOneOf(array $search, bool $inclusive = false): string;
 
-    public function peekUntilCallback(callable $callback): string;
+    public function peekUntilCallback(callable $callback, bool $inclusive = false): string;
 
     public function peekUntilEOS(): string;
 

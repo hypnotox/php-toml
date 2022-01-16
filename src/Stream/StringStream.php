@@ -21,6 +21,11 @@ final class StringStream implements StringStreamInterface
         $this->consumeWhitespace();
     }
 
+    public function getInputLength(): int
+    {
+        return $this->inputLength;
+    }
+
     public function getPointer(): int
     {
         return $this->pointer;
@@ -52,7 +57,7 @@ final class StringStream implements StringStreamInterface
         return substr($this->input, $this->pointer, $n);
     }
 
-    public function peekUntil(string $search): string
+    public function peekUntil(string $search, bool $inclusive = false): string
     {
         $buffer = '';
         $pointer = $this->pointer;
@@ -62,10 +67,14 @@ final class StringStream implements StringStreamInterface
             ++$pointer;
         }
 
+        if ($inclusive && $pointer < $this->inputLength) {
+            $buffer .= $this->input[$pointer];
+        }
+
         return $buffer;
     }
 
-    public function peekUntilOneOf(array $search): string
+    public function peekUntilOneOf(array $search, bool $inclusive = false): string
     {
         $buffer = '';
         $pointer = $this->pointer;
@@ -75,10 +84,14 @@ final class StringStream implements StringStreamInterface
             ++$pointer;
         }
 
+        if ($inclusive && $pointer < $this->inputLength) {
+            $buffer .= $this->input[$pointer];
+        }
+
         return $buffer;
     }
 
-    public function peekUntilNotOneOf(array $search): string
+    public function peekUntilNotOneOf(array $search, bool $inclusive = false): string
     {
         $buffer = '';
         $pointer = $this->pointer;
@@ -88,10 +101,14 @@ final class StringStream implements StringStreamInterface
             ++$pointer;
         }
 
+        if ($inclusive && $pointer < $this->inputLength) {
+            $buffer .= $this->input[$pointer];
+        }
+
         return $buffer;
     }
 
-    public function peekUntilCallback(callable $callback): string
+    public function peekUntilCallback(callable $callback, bool $inclusive = false): string
     {
         $buffer = '';
         $pointer = $this->pointer;
@@ -99,6 +116,10 @@ final class StringStream implements StringStreamInterface
         while ($pointer < $this->inputLength && ($char = $this->input[$pointer]) !== '' && $callback($char)) {
             $buffer .= $char;
             ++$pointer;
+        }
+
+        if ($inclusive && $pointer < $this->inputLength) {
+            $buffer .= $this->input[$pointer];
         }
 
         return $buffer;
