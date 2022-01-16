@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Lexer\Tokenizer;
+namespace HypnoTox\Toml\Lexer\Tokenizer\Value;
 
 use HypnoTox\Toml\Lexer\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Lexer\Token\TokenType;
 use HypnoTox\Toml\Stream\StringStreamInterface;
 use function strlen;
 
-final class FloatTokenizer extends AbstractTokenizer
+final class FloatTokenizer extends AbstractValueTokenizer
 {
     public function tokenize(StringStreamInterface $stream, TokenStreamInterface $tokenStream): bool
     {
