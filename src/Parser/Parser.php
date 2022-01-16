@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Parser;
 
 use HypnoTox\Toml\Builder\TomlBuilderInterface;
+use HypnoTox\Toml\Exception\EncodingException;
+use HypnoTox\Toml\Exception\UnableToParseInputException;
 use HypnoTox\Toml\Lexer\LexerInterface;
-use HypnoTox\Toml\Parser\Exception\EncodingException;
-use HypnoTox\Toml\Parser\Exception\TomlExceptionInterface;
-use HypnoTox\Toml\Parser\Exception\UnableToParseInputException;
 use HypnoTox\Toml\Parser\TokenParser\Expression\ExpressionParserInterface;
 use HypnoTox\Toml\Parser\TokenParser\Expression\KeyValueParser;
 use HypnoTox\Toml\Parser\TokenParser\Expression\NewlineParser;
@@ -40,9 +39,9 @@ final class Parser implements ParserInterface
     }
 
     /**
-     * @throws UnableToParseInputException
-     * @throws EncodingException
-     * @throws TomlExceptionInterface
+     * @throws \HypnoTox\Toml\Exception\UnableToParseInputException
+     * @throws \HypnoTox\Toml\Exception\EncodingException
+     * @throws \HypnoTox\Toml\Exception\TomlExceptionInterface
      */
     public function parse(string $input): TomlInterface
     {

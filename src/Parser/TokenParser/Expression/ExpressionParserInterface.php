@@ -6,13 +6,12 @@ namespace HypnoTox\Toml\Parser\TokenParser\Expression;
 
 use HypnoTox\Toml\Builder\TomlBuilderInterface;
 use HypnoTox\Toml\Lexer\Stream\TokenStreamInterface;
-use HypnoTox\Toml\Parser\Exception\TomlExceptionInterface;
 use HypnoTox\Toml\Parser\TokenParser\TokenParserInterface;
 
 interface ExpressionParserInterface extends TokenParserInterface
 {
     /**
-     * @throws TomlExceptionInterface
+     * @throws \HypnoTox\Toml\Exception\TomlExceptionInterface
      */
     public function parse(TomlBuilderInterface $builder, TokenStreamInterface $stream): void;
 }

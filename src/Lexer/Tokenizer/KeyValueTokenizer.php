@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Lexer\Tokenizer;
 
+use HypnoTox\Toml\Exception\SyntaxException;
 use HypnoTox\Toml\Lexer\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Lexer\Token\TokenFactoryInterface;
 use HypnoTox\Toml\Lexer\Token\TokenType;
@@ -11,7 +12,6 @@ use HypnoTox\Toml\Lexer\Tokenizer\Value\BasicStringTokenizer;
 use HypnoTox\Toml\Lexer\Tokenizer\Value\DatetimeTokenizer;
 use HypnoTox\Toml\Lexer\Tokenizer\Value\FloatTokenizer;
 use HypnoTox\Toml\Lexer\Tokenizer\Value\IntegerTokenizer;
-use HypnoTox\Toml\Parser\Exception\SyntaxException;
 use HypnoTox\Toml\Stream\StringStreamFactoryInterface;
 use HypnoTox\Toml\Stream\StringStreamInterface;
 use function strlen;
@@ -88,7 +88,7 @@ final class KeyValueTokenizer extends AbstractTokenizer
             if ('' === $input) {
                 $this->raiseException(
                     $stream,
-                    'Unexpected end of line, expected value',
+                    'Unexpected T_RETURN "\n", expected value',
                 );
             }
 
@@ -105,14 +105,9 @@ final class KeyValueTokenizer extends AbstractTokenizer
                 }
 
                 if ($valueStream->getPointer() === $lastPointer) {
-                    throw new SyntaxException(
-                        sprintf(
-                            'SyntaxError: %s on line %d:%d: "%s"',
-                            'Could not parse input',
-                            $valueStream->getLineNumber(),
-                            $valueStream->getLineOffset() + 1,
-                            $valueStream->peekUntilEOL(),
-                        ),
+                    $this->raiseException(
+                        $stream,
+                        'Could not parse input',
                     );
                 }
             }

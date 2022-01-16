@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Lexer\Tokenizer;
 
+use HypnoTox\Toml\Exception\SyntaxException;
 use HypnoTox\Toml\Lexer\Token\TokenFactoryInterface;
-use HypnoTox\Toml\Parser\Exception\SyntaxException;
 use HypnoTox\Toml\Stream\StringStreamInterface;
 
 abstract class AbstractTokenizer implements TokenizerInterface
@@ -16,7 +16,7 @@ abstract class AbstractTokenizer implements TokenizerInterface
     }
 
     /**
-     * @throws SyntaxException
+     * @throws \HypnoTox\Toml\Exception\SyntaxException
      */
     protected function raiseException(StringStreamInterface $stream, string $message): never
     {

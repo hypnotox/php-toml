@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser;
 
+use HypnoTox\Toml\Exception\AbstractParserException;
 use HypnoTox\Toml\Lexer\Token\TokenType;
-use HypnoTox\Toml\Parser\Exception\AbstractParserException;
 use HypnoTox\Toml\TomlInterface;
 
 interface ParserInterface

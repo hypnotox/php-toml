@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Lexer;
 
+use HypnoTox\Toml\Exception\SyntaxException;
 use HypnoTox\Toml\Lexer\Stream\TokenStreamFactoryInterface;
 use HypnoTox\Toml\Lexer\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Lexer\Token\TokenFactoryInterface;
@@ -11,7 +12,6 @@ use HypnoTox\Toml\Lexer\Tokenizer\CommentTokenizer;
 use HypnoTox\Toml\Lexer\Tokenizer\EndOfLineTokenizer;
 use HypnoTox\Toml\Lexer\Tokenizer\KeyValueTokenizer;
 use HypnoTox\Toml\Lexer\Tokenizer\TokenizerInterface;
-use HypnoTox\Toml\Parser\Exception\SyntaxException;
 use HypnoTox\Toml\Stream\StringStreamFactoryInterface;
 
 final class Lexer implements LexerInterface
