@@ -7,6 +7,7 @@ namespace HypnoTox\Toml\Parser\Tokenizer;
 use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
 use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Parser\Token\TokenType;
+use function strlen;
 
 final class DatetimeTokenizer extends AbstractTokenizer
 {
@@ -20,7 +21,7 @@ final class DatetimeTokenizer extends AbstractTokenizer
             $tokenStream->addToken(
                 $this->tokenFactory->make(
                     TokenType::T_DATETIME,
-                    trim($stream->consume(\strlen($string))),
+                    trim($stream->consume(strlen($string))),
                     $lineNumber,
                     $lineOffset,
                 )
@@ -33,7 +34,7 @@ final class DatetimeTokenizer extends AbstractTokenizer
             $tokenStream->addToken(
                 $this->tokenFactory->make(
                     TokenType::T_DATE,
-                    trim($stream->consume(\strlen($string))),
+                    trim($stream->consume(strlen($string))),
                     $lineNumber,
                     $lineOffset,
                 )
@@ -46,7 +47,7 @@ final class DatetimeTokenizer extends AbstractTokenizer
             $tokenStream->addToken(
                 $this->tokenFactory->make(
                     TokenType::T_TIME,
-                    trim($stream->consume(\strlen($string))),
+                    trim($stream->consume(strlen($string))),
                     $lineNumber,
                     $lineOffset,
                 )

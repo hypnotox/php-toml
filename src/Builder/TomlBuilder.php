@@ -7,7 +7,7 @@ namespace HypnoTox\Toml\Builder;
 use HypnoTox\Toml\TomlFactoryInterface;
 use HypnoTox\Toml\TomlInterface;
 
-class TomlBuilder implements TomlBuilderInterface
+final class TomlBuilder implements TomlBuilderInterface
 {
     public function __construct(
         private TomlFactoryInterface $factory,
@@ -15,7 +15,7 @@ class TomlBuilder implements TomlBuilderInterface
     ) {
     }
 
-    public function setData(array $data): TomlBuilder
+    public function setData(array $data): self
     {
         $this->data = $data;
 

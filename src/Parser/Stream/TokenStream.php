@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\Stream;
 
+use function count;
 use HypnoTox\Toml\Parser\Token\TokenInterface;
 use HypnoTox\Toml\Parser\Token\TokenType;
 
@@ -43,7 +44,7 @@ final class TokenStream implements TokenStreamInterface
 
     public function consumeNewlines(): void
     {
-        while ($this->peek()->getType() === TokenType::T_RETURN) {
+        while (TokenType::T_RETURN === $this->peek()->getType()) {
             $this->consume();
         }
     }

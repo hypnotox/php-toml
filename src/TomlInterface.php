@@ -13,7 +13,7 @@ interface TomlInterface
 
     public function get(string $key): mixed;
 
-    public function set(string $key, mixed $value): TomlInterface;
+    public function set(string $key, mixed $value): self;
 
     public function toJson(): string;
 }

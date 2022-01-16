@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\Exception;
 
-interface TomlExceptionInterface extends \Throwable
+use Throwable;
+
+interface TomlExceptionInterface extends Throwable
 {
 }

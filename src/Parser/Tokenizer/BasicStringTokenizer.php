@@ -7,6 +7,8 @@ namespace HypnoTox\Toml\Parser\Tokenizer;
 use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
 use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Parser\Token\TokenType;
+use function in_array;
+use function strlen;
 
 final class BasicStringTokenizer extends AbstractTokenizer
 {
@@ -17,16 +19,16 @@ final class BasicStringTokenizer extends AbstractTokenizer
             $lineOffset = $stream->getLineOffset();
             $lastChar = $stream->consume();
             $string = $stream->consume(
-                \strlen(
+                strlen(
                     $stream->peekUntilCallback(
-                        function (string $char) use (&$lastChar) {
+                        static function (string $char) use (&$lastChar) {
                             if ('"' === $char && '\\' === $lastChar) {
                                 return true;
                             }
 
                             $lastChar = $char;
 
-                            return !\in_array($char, ['"', StringStreamInterface::EOL], true);
+                            return !in_array($char, ['"', StringStreamInterface::EOL], true);
                         },
                     ),
                 ),

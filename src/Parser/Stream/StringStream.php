@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\Stream;
 
+use function in_array;
+use function strlen;
+
 final class StringStream implements StringStreamInterface
 {
     private int $pointer = 0;
@@ -14,7 +17,7 @@ final class StringStream implements StringStreamInterface
         private int $lineNumber = 1,
         private int $lineOffset = 0,
     ) {
-        $this->inputLength = \strlen($this->input);
+        $this->inputLength = strlen($this->input);
         $this->consumeWhitespace();
     }
 
@@ -67,7 +70,7 @@ final class StringStream implements StringStreamInterface
         $buffer = '';
         $pointer = $this->pointer;
 
-        while ($pointer < $this->inputLength && ($char = $this->input[$pointer]) !== '' && !\in_array($char, $search, true)) {
+        while ($pointer < $this->inputLength && ($char = $this->input[$pointer]) !== '' && !in_array($char, $search, true)) {
             $buffer .= $char;
             ++$pointer;
         }
@@ -80,7 +83,7 @@ final class StringStream implements StringStreamInterface
         $buffer = '';
         $pointer = $this->pointer;
 
-        while ($pointer < $this->inputLength && ($char = $this->input[$pointer]) !== '' && \in_array($char, $search, true)) {
+        while ($pointer < $this->inputLength && ($char = $this->input[$pointer]) !== '' && in_array($char, $search, true)) {
             $buffer .= $char;
             ++$pointer;
         }
@@ -115,7 +118,7 @@ final class StringStream implements StringStreamInterface
     {
         $subString = $this->peek($n);
         $this->forward($n);
-        $this->incrementLineNumber(\strlen($subString) - \strlen(str_replace("\n", '', $subString)));
+        $this->incrementLineNumber(strlen($subString) - strlen(str_replace("\n", '', $subString)));
 
         return $subString;
     }
@@ -123,7 +126,7 @@ final class StringStream implements StringStreamInterface
     public function consumeWhitespace(): void
     {
         $string = $this->peekUntilNotOneOf(self::WHITESPACE);
-        $this->consume(\strlen($string));
+        $this->consume(strlen($string));
     }
 
     public function isEOF(): bool

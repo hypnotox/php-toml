@@ -7,6 +7,7 @@ namespace HypnoTox\Toml\Parser\Tokenizer;
 use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
 use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Parser\Token\TokenType;
+use function strlen;
 
 final class DottedStringTokenizer extends AbstractTokenizer
 {
@@ -20,7 +21,7 @@ final class DottedStringTokenizer extends AbstractTokenizer
             return false;
         }
 
-        $stream->consume(\strlen($string));
+        $stream->consume(strlen($string));
         $tokenStream->addToken(
             $this->tokenFactory->make(
                 TokenType::T_DOTTED_STRING,

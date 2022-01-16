@@ -14,7 +14,7 @@ use HypnoTox\Toml\Parser\TokenParser\Value\BasicStringParser;
 use HypnoTox\Toml\Parser\TokenParser\Value\LiteralStringParser;
 use HypnoTox\Toml\Parser\TokenParser\Value\ValueParserInterface;
 
-class KeyValueParser extends AbstractTokenParser implements ExpressionParserInterface
+final class KeyValueParser extends AbstractTokenParser implements ExpressionParserInterface
 {
     /**
      * @var ValueParserInterface[]
@@ -39,7 +39,7 @@ class KeyValueParser extends AbstractTokenParser implements ExpressionParserInte
 
     public function canHandle(TokenInterface $token): bool
     {
-        return $token->getType() === TokenType::T_KEY;
+        return TokenType::T_KEY === $token->getType();
     }
 
     public function parse(TomlBuilderInterface $builder, TokenStreamInterface $stream): void

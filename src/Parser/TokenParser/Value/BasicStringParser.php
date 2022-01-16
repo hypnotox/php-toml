@@ -8,11 +8,11 @@ use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Parser\Token\TokenInterface;
 use HypnoTox\Toml\Parser\Token\TokenType;
 
-class BasicStringParser implements ValueParserInterface
+final class BasicStringParser implements ValueParserInterface
 {
     public function canHandle(TokenInterface $token): bool
     {
-        return $token->getType() === TokenType::T_BASIC_STRING;
+        return TokenType::T_BASIC_STRING === $token->getType();
     }
 
     public function parse(TokenStreamInterface $stream): string

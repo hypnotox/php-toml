@@ -11,9 +11,9 @@ interface TomlBuilderInterface
 {
     public function __construct(TomlFactoryInterface $factory, array $data = []);
 
-    public function setData(array $data): TomlBuilderInterface;
+    public function setData(array $data): self;
 
-    public function set(string $key, mixed $value): TomlBuilderInterface;
+    public function set(string $key, mixed $value): self;
 
     public function build(): TomlInterface;
 }

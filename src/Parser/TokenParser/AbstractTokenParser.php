@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\TokenParser;
 
+use function count;
 use HypnoTox\Toml\Parser\Exception\UnexpectedTokenException;
 use HypnoTox\Toml\Parser\Token\TokenInterface;
 use HypnoTox\Toml\Parser\Token\TokenType;
+use function in_array;
 
 abstract class AbstractTokenParser implements TokenParserInterface
 {
@@ -44,7 +46,7 @@ abstract class AbstractTokenParser implements TokenParserInterface
                 $actual->getLine(),
                 $actual->getOffset() + 1,
                 count($expected) > 1 ? 'one of ' : '',
-                implode(', ', array_map(static fn(TokenType $tokenType) => $tokenType->name, $expected)),
+                implode(', ', array_map(static fn (TokenType $tokenType) => $tokenType->name, $expected)),
             ),
         );
     }

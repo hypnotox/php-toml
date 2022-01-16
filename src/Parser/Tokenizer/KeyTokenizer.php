@@ -7,18 +7,19 @@ namespace HypnoTox\Toml\Parser\Tokenizer;
 use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
 use HypnoTox\Toml\Parser\Stream\TokenStreamInterface;
 use HypnoTox\Toml\Parser\Token\TokenType;
+use function strlen;
 
 final class KeyTokenizer extends AbstractTokenizer
 {
     public function tokenize(StringStreamInterface $stream, TokenStreamInterface $tokenStream): bool
     {
-        if ($stream->getLineOffset() === 0) {
+        if (0 === $stream->getLineOffset()) {
             $lineNumber = $stream->getLineNumber();
             $lineOffset = $stream->getLineOffset();
             $string = $stream->peekUntilOneOf(['=', ',', StringStreamInterface::EOL, StringStreamInterface::COMMENT]);
             $stream->consume(strlen($string));
 
-            if ($stream->peek() === StringStreamInterface::EOL) {
+            if (StringStreamInterface::EOL === $stream->peek()) {
                 $this->raiseException($stream, 'Unexpected T_RETURN "\n", expected T_EQUALS "="');
             }
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\Token;
 
+use function strlen;
+
 final class Token implements TokenInterface
 {
     public function __construct(
@@ -41,7 +43,7 @@ final class Token implements TokenInterface
             $this->getType()->name,
             $this->getLine(),
             $this->getOffset(),
-            \strlen($this->getValue()),
+            strlen($this->getValue()),
             str_replace("\n", '\n', $this->getValue()),
         );
     }

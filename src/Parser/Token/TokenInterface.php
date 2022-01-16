@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\Token;
 
-interface TokenInterface extends \Stringable
+use Stringable;
+
+interface TokenInterface extends Stringable
 {
     public function __construct(TokenType $type, string $value, int $line, int $offset);
 
