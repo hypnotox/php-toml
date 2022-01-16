@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Lexer\Tokenizer\Stream;
+namespace HypnoTox\Toml\Lexer\Stream;
 
-use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenInterface;
+use HypnoTox\Toml\Lexer\Token\TokenInterface;
 use HypnoTox\Toml\Stream\StreamInterface;
 
 interface TokenStreamInterface extends StreamInterface, \Stringable
 {
     /**
-     * @param \HypnoTox\Toml\Lexer\Tokenizer\Token\TokenInterface[] $tokens
+     * @param TokenInterface[] $tokens
      */
     public function __construct(array $tokens);
 

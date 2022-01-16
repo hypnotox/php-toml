@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Lexer;
 
+use HypnoTox\Toml\Lexer\Stream\TokenStreamFactoryInterface;
+use HypnoTox\Toml\Lexer\Stream\TokenStreamInterface;
+use HypnoTox\Toml\Lexer\Token\TokenFactoryInterface;
 use HypnoTox\Toml\Lexer\Tokenizer\BasicStringTokenizer;
 use HypnoTox\Toml\Lexer\Tokenizer\CommentTokenizer;
 use HypnoTox\Toml\Lexer\Tokenizer\DatetimeTokenizer;
@@ -12,9 +15,6 @@ use HypnoTox\Toml\Lexer\Tokenizer\FloatTokenizer;
 use HypnoTox\Toml\Lexer\Tokenizer\IntegerTokenizer;
 use HypnoTox\Toml\Lexer\Tokenizer\KeyTokenizer;
 use HypnoTox\Toml\Lexer\Tokenizer\PunctuationTokenizer;
-use HypnoTox\Toml\Lexer\Tokenizer\Stream\TokenStreamFactoryInterface;
-use HypnoTox\Toml\Lexer\Tokenizer\Stream\TokenStreamInterface;
-use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenFactoryInterface;
 use HypnoTox\Toml\Lexer\Tokenizer\TokenizerInterface;
 use HypnoTox\Toml\Parser\Exception\SyntaxException;
 use HypnoTox\Toml\Stream\StringStreamFactoryInterface;

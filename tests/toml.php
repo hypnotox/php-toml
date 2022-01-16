@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use HypnoTox\Toml\Builder\Builder;
 use HypnoTox\Toml\Lexer\Lexer;
-use HypnoTox\Toml\Lexer\Tokenizer\Stream\TokenStreamFactory;
-use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenFactory;
+use HypnoTox\Toml\Lexer\Stream\TokenStreamFactory;
+use HypnoTox\Toml\Lexer\Token\TokenFactory;
 use HypnoTox\Toml\Parser\Parser;
 use HypnoTox\Toml\Stream\StringStreamFactory;
 

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Parser\TokenParser\Expression;
 
 use HypnoTox\Toml\Builder\TomlBuilderInterface;
-use HypnoTox\Toml\Lexer\Tokenizer\Stream\TokenStreamInterface;
-use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenInterface;
-use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenType;
+use HypnoTox\Toml\Lexer\Stream\TokenStreamInterface;
+use HypnoTox\Toml\Lexer\Token\TokenInterface;
+use HypnoTox\Toml\Lexer\Token\TokenType;
 use HypnoTox\Toml\Parser\ParserInterface;
 use HypnoTox\Toml\Parser\TokenParser\AbstractTokenParser;
 use HypnoTox\Toml\Parser\TokenParser\Value\BasicStringParser;

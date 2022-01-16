@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Parser\TokenParser;
 
 use function count;
-use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenInterface;
-use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenType;
+use HypnoTox\Toml\Lexer\Token\TokenInterface;
+use HypnoTox\Toml\Lexer\Token\TokenType;
 use HypnoTox\Toml\Parser\Exception\UnexpectedTokenException;
 use function in_array;
 
@@ -33,7 +33,7 @@ abstract class AbstractTokenParser implements TokenParserInterface
     }
 
     /**
-     * @param list<TokenType> $expected
+     * @param list<\HypnoTox\Toml\Lexer\Token\TokenType> $expected
      *
      * @throws UnexpectedTokenException
      */

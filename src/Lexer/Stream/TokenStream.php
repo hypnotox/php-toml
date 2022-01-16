@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Lexer\Tokenizer\Stream;
+namespace HypnoTox\Toml\Lexer\Stream;
 
 use function count;
-use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenInterface;
-use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenType;
+use HypnoTox\Toml\Lexer\Token\TokenInterface;
+use HypnoTox\Toml\Lexer\Token\TokenType;
 
 final class TokenStream implements TokenStreamInterface
 {

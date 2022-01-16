@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Lexer\Tokenizer\Token;
+namespace HypnoTox\Toml\Lexer\Token;
 
 interface TokenFactoryInterface
 {

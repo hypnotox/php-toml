@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Lexer\Tokenizer;
 
-use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenFactoryInterface;
+use HypnoTox\Toml\Lexer\Token\TokenFactoryInterface;
 use HypnoTox\Toml\Parser\Exception\SyntaxException;
 use HypnoTox\Toml\Stream\StringStreamInterface;
 

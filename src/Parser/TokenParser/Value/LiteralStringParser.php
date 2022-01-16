@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\TokenParser\Value;
 
-use HypnoTox\Toml\Lexer\Tokenizer\Stream\TokenStreamInterface;
-use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenInterface;
-use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenType;
+use HypnoTox\Toml\Lexer\Stream\TokenStreamInterface;
+use HypnoTox\Toml\Lexer\Token\TokenInterface;
+use HypnoTox\Toml\Lexer\Token\TokenType;
 
 final class LiteralStringParser implements ValueParserInterface
 {

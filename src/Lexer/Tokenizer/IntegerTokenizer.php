@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Lexer\Tokenizer;
 
-use HypnoTox\Toml\Lexer\Tokenizer\Stream\TokenStreamInterface;
-use HypnoTox\Toml\Lexer\Tokenizer\Token\TokenType;
+use HypnoTox\Toml\Lexer\Stream\TokenStreamInterface;
+use HypnoTox\Toml\Lexer\Token\TokenType;
 use HypnoTox\Toml\Stream\StringStreamInterface;
 use function HypnoTox\Toml\Tokenizer\str_contains;
 use function strlen;
