@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-use HypnoTox\Toml\Builder\Builder;
+use HypnoTox\Toml\Builder\TomlBuilder;
 use HypnoTox\Toml\Lexer\Lexer;
 use HypnoTox\Toml\Lexer\Stream\TokenStreamFactory;
 use HypnoTox\Toml\Lexer\Token\TokenFactory;
 use HypnoTox\Toml\Parser\Parser;
 use HypnoTox\Toml\Stream\StringStreamFactory;
+use HypnoTox\Toml\TomlFactory;
 
 include 'vendor/autoload.php';
 
@@ -20,7 +21,9 @@ $parser = new Parser(
         new TokenStreamFactory(),
         new TokenFactory(),
     ),
-    new Builder(),
+    new TomlBuilder(
+        new TomlFactory(),
+    ),
 );
 
 try {

@@ -10,7 +10,7 @@ use HypnoTox\Toml\TomlInterface;
 final class TomlBuilder implements TomlBuilderInterface
 {
     public function __construct(
-        private TomlFactoryInterface $factory,
+        private readonly TomlFactoryInterface $factory,
         private array $data = [],
     ) {
     }
