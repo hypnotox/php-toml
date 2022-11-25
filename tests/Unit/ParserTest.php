@@ -6,13 +6,7 @@ namespace Tests;
 
 use const DIRECTORY_SEPARATOR;
 use Generator;
-use HypnoTox\Toml\Builder\TomlBuilder;
-use HypnoTox\Toml\Lexer\Lexer;
-use HypnoTox\Toml\Lexer\Stream\TokenStreamFactory;
-use HypnoTox\Toml\Lexer\Token\TokenFactory;
 use HypnoTox\Toml\Parser\Parser;
-use HypnoTox\Toml\Stream\StringStreamFactory;
-use HypnoTox\Toml\TomlFactory;
 use function in_array;
 
 final class ParserTest extends BaseTest
@@ -36,23 +30,13 @@ final class ParserTest extends BaseTest
 
     public function getParser(): Parser
     {
-        return new Parser(
-            new Lexer(
-                new StringStreamFactory(),
-                new TokenStreamFactory(),
-                new TokenFactory(),
-            ),
-            new TomlBuilder(
-                new TomlFactory(),
-            ),
-        );
+        return new Parser();
     }
 
     public function validInputProvider(): Generator
     {
         /** @var array $values */
         foreach ($this->generateFromDirectory(__DIR__.'/../Fixtures/valid') as $values) {
-            dump($values);
             array_unshift($values, $this->getParser());
 
             yield $values;
