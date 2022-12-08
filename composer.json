@@ -45,6 +45,10 @@
 			"@lint",
 			"@unit"
 		],
+		"flint": [
+			"@fix",
+			"@lint"
+		],
 		"unit": "vendor/bin/phpunit",
 		"unit-coverage": "@unit --coverage-clover coverage.xml",
 		"coverage-badge": "vendor/bin/php-coverage-badger coverage/clover.xml coverage/badge.svg",
