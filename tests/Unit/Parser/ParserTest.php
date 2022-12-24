@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests;
+namespace HypnoTox\Toml\Tests\Unit\Parser;
 
 use const DIRECTORY_SEPARATOR;
 use Generator;
 use HypnoTox\Toml\Parser\Parser;
+use HypnoTox\Toml\Tests\Unit\BaseTest;
 use function in_array;
 
 final class ParserTest extends BaseTest
@@ -36,7 +37,7 @@ final class ParserTest extends BaseTest
     public function validInputProvider(): Generator
     {
         /** @var array $values */
-        foreach ($this->generateFromDirectory(__DIR__.'/../Fixtures/valid') as $values) {
+        foreach ($this->generateFromDirectory(__DIR__.'/../../Fixtures/valid') as $values) {
             array_unshift($values, $this->getParser());
 
             yield $values;
@@ -47,7 +48,7 @@ final class ParserTest extends BaseTest
     public function invalidInputProvider(): Generator
     {
         /** @var array $values */
-        foreach ($this->generateFromDirectory(__DIR__.'/../Fixtures/invalid', false) as $values) {
+        foreach ($this->generateFromDirectory(__DIR__.'/../../Fixtures/invalid', false) as $values) {
             array_unshift($values, $this->getParser());
 
             yield $values;

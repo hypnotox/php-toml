@@ -5,23 +5,33 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Stream;
 
 /**
- * @template TStream
- * @template TUnit
+ * @internal
  */
 interface StreamInterface
 {
-    /**
-     * @return TUnit
-     */
-    public function peek(int $length = 1): mixed;
+    public function peek(int $length = 1): string;
 
     /**
-     * @return TUnit
+     * @param string[] $characters
      */
-    public function consume(int $length = 1): mixed;
+    public function seekUntil(array $characters): int;
 
     /**
-     * @param TUnit[] $seekUnits
+     * @param string[] $characters
      */
-    public function seekUntil(array $seekUnits): int;
+    public function seekUntilNot(array $characters): int;
+
+    public function consume(int $length = 1): string;
+
+    /**
+     * @param string[] $characters
+     */
+    public function consumeUntil(array $characters): string;
+
+    /**
+     * @param string[] $characters
+     */
+    public function consumeUntilNot(array $characters): string;
+
+    public function isEndOfFile(): bool;
 }
