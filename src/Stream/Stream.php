@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Stream;
 
 use HypnoTox\Toml\Exception\EncodingException;
+use HypnoTox\Toml\Token\TokenType;
 
 /**
  * @internal
@@ -33,25 +34,26 @@ final class Stream implements StreamInterface
         return $this->getSubstring($length);
     }
 
-    public function seekUntil(array $characters): int
+    public function seekUntil(array|TokenType $characters): int
     {
-        $maxOffset = $this->length - $this->pointer;
-        $offset = null;
+        $characters = $characters instanceof TokenType ? $characters->getCharacters() : $characters;
+        $offset = $this->length - $this->pointer;
         $string = $this->getSubstring();
 
         foreach ($characters as $seekUnit) {
             $position = mb_strpos($string, $seekUnit);
 
             if (false !== $position) {
-                $offset = min($maxOffset, $position);
+                $offset = min($offset, $position);
             }
         }
 
-        return $offset ?? $maxOffset;
+        return $offset;
     }
 
-    public function seekUntilNot(array $characters): int
+    public function seekUntilNot(array|TokenType $characters): int
     {
+        $characters = $characters instanceof TokenType ? $characters->getCharacters() : $characters;
         $buckets = [];
 
         foreach ($characters as $character) {
@@ -88,12 +90,12 @@ final class Stream implements StreamInterface
         return $result;
     }
 
-    public function consumeUntil(array $characters): string
+    public function consumeUntil(array|TokenType $characters): string
     {
         return $this->consume($this->seekUntil($characters));
     }
 
-    public function consumeUntilNot(array $characters): string
+    public function consumeUntilNot(array|TokenType $characters): string
     {
         return $this->consume($this->seekUntilNot($characters));
     }

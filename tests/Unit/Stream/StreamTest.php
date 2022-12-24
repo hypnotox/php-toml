@@ -8,6 +8,7 @@ use HypnoTox\Toml\Exception\EncodingException;
 use HypnoTox\Toml\Stream\StreamInterface;
 use HypnoTox\Toml\Stream\Stream;
 use HypnoTox\Toml\Tests\Unit\BaseTest;
+use HypnoTox\Toml\Token\TokenType;
 
 final class StreamTest extends BaseTest
 {
@@ -37,6 +38,29 @@ final class StreamTest extends BaseTest
         $this->assertTrue($instance->isEndOfFile());
     }
 
+    public function testSeekUntil(): void
+    {
+        $instance = new Stream("abcd \t\n\r\n😀");
+
+        $this->assertSame(4, $instance->seekUntil([' ']));
+        $this->assertSame(5, $instance->seekUntil(["\t"]));
+        $this->assertSame(0, $instance->seekUntil(['a']));
+        $this->assertSame(9, $instance->seekUntil(['😀']));
+        $this->assertSame(6, $instance->seekUntil(TokenType::T_NEWLINE));
+    }
+
+    public function testSeekUntilNot(): void
+    {
+        $instance = new Stream("abcd \t\n\r\n😀");
+
+        $this->assertSame(1, $instance->seekUntilNot(['a']));
+        $this->assertSame(4, $instance->seekUntilNot(['a', 'b', 'c', 'd']));
+        $this->assertSame(5, $instance->seekUntilNot(['a', 'b', 'c', 'd', ' ']));
+        $this->assertSame(5, $instance->seekUntilNot(mb_str_split('abcd ')));
+        $instance->consumeUntilNot(mb_str_split("abcd \t"));
+        $this->assertSame(3, $instance->seekUntilNot(TokenType::T_NEWLINE));
+    }
+
     public function testConsumeUntil(): void
     {
         $instance = new Stream("abcd \t\n\r\n😀");
@@ -54,26 +78,6 @@ final class StreamTest extends BaseTest
         $this->assertSame('abcd', $instance->consumeUntilNot(mb_str_split('dcba')));
         $this->assertSame(" \t", $instance->consumeUntilNot([' ', "\t"]));
         $this->assertSame("\n\r\n", $instance->consumeUntilNot(["\n", "\r\n"]));
-    }
-
-    public function testSeekUntil(): void
-    {
-        $instance = new Stream("abcd \t\n\r\n😀");
-
-        $this->assertSame(4, $instance->seekUntil([' ']));
-        $this->assertSame(5, $instance->seekUntil(["\t"]));
-        $this->assertSame(0, $instance->seekUntil(['a']));
-        $this->assertSame(9, $instance->seekUntil(['😀']));
-    }
-
-    public function testSeekUntilNot(): void
-    {
-        $instance = new Stream("abcd \t\n\r\n😀");
-
-        $this->assertSame(1, $instance->seekUntilNot(['a']));
-        $this->assertSame(4, $instance->seekUntilNot(['a', 'b', 'c', 'd']));
-        $this->assertSame(5, $instance->seekUntilNot(['a', 'b', 'c', 'd', ' ']));
-        $this->assertSame(5, $instance->seekUntilNot(mb_str_split('abcd ')));
     }
 
     public function testGetSubstring(): void
