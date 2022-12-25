@@ -12,16 +12,24 @@ use HypnoTox\Toml\Token\TokenType;
 /**
  * @internal
  */
-final class CommentLexer implements TokenLexerInterface
+final class StringLexer implements TokenLexerInterface
 {
     public function getTokenType(): TokenType
     {
-        return TokenType::T_COMMENT;
+        return TokenType::T_STRING;
     }
 
     public function canTokenize(StreamInterface $stream): bool
     {
-        return $stream->seekUntilNot($this->getTokenType()) > 0;
+        $stringLength = $stream->seekUntilNot($this->getTokenType());
+
+        if (0 === $stringLength) {
+            return false;
+        }
+
+        $string = $stream->peek($stringLength);
+
+        return !is_numeric($string);
     }
 
     public function tokenize(StreamInterface|string $input): array
@@ -38,6 +46,12 @@ final class CommentLexer implements TokenLexerInterface
 
     private function consumeStream(StreamInterface $stream): string
     {
-        return $stream->consumeUntil(TokenType::T_NEWLINE);
+        return $stream->consumeUntil(
+            [
+                ...TokenType::T_WHITESPACE->getCharacters(),
+                ...TokenType::T_NEWLINE->getCharacters(),
+                ...TokenType::T_EQUALS->getCharacters(),
+            ]
+        );
     }
 }

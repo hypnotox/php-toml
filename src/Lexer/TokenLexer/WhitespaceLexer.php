@@ -1,18 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace HypnoTox\Toml\Lexer\TokenLexer;
 
 use HypnoTox\Toml\Stream\Stream;
 use HypnoTox\Toml\Stream\StreamInterface;
-use HypnoTox\Toml\Token\Token;
 use HypnoTox\Toml\Token\TokenType;
 
 /**
  * @internal
  */
-abstract class AbstractTokenLexer implements TokenLexerInterface
+final class WhitespaceLexer implements TokenLexerInterface
 {
-    abstract public function getTokenType(): TokenType;
+    public function getTokenType(): TokenType
+    {
+        return TokenType::T_WHITESPACE;
+    }
 
     public function canTokenize(StreamInterface $stream): bool
     {
@@ -22,14 +26,8 @@ abstract class AbstractTokenLexer implements TokenLexerInterface
     public function tokenize(StreamInterface|string $input): array
     {
         $stream = $input instanceof StreamInterface ? $input : new Stream($input);
+        $stream->consumeUntilNot(TokenType::T_WHITESPACE);
 
-        return [
-            new Token(
-                $this->getTokenType(),
-                $this->consumeStream($stream),
-            ),
-        ];
+        return [];
     }
-
-    abstract protected function consumeStream(StreamInterface $stream): mixed;
 }

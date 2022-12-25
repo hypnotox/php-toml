@@ -7,10 +7,16 @@ namespace HypnoTox\Toml\Lexer;
 use HypnoTox\Toml\Exception\EncodingException;
 use HypnoTox\Toml\Exception\UnableToParseInputException;
 use HypnoTox\Toml\Lexer\TokenLexer\CommentLexer;
+use HypnoTox\Toml\Lexer\TokenLexer\EqualsLexer;
+use HypnoTox\Toml\Lexer\TokenLexer\FloatLexer;
+use HypnoTox\Toml\Lexer\TokenLexer\IntegerLexer;
 use HypnoTox\Toml\Lexer\TokenLexer\NewlineLexer;
+use HypnoTox\Toml\Lexer\TokenLexer\StringLexer;
 use HypnoTox\Toml\Lexer\TokenLexer\TokenLexerInterface;
+use HypnoTox\Toml\Lexer\TokenLexer\WhitespaceLexer;
 use HypnoTox\Toml\Stream\Stream;
 use HypnoTox\Toml\Token\TokenInterface;
+use HypnoTox\Toml\Token\TokenType;
 
 /**
  * @internal
@@ -35,7 +41,13 @@ final class Lexer implements LexerInterface
                 }
             }
 
-            throw new UnableToParseInputException();
+            $unableToTokenize = $stream->consumeUntil(TokenType::T_EOF);
+
+            if (mb_strlen($unableToTokenize) > 100) {
+                $unableToTokenize = mb_substr($unableToTokenize, 0, 100) . '[...]';
+            }
+
+            throw new UnableToParseInputException("Unable to tokenize: '$unableToTokenize'");
         }
 
         return $tokens;
@@ -49,6 +61,11 @@ final class Lexer implements LexerInterface
         return [
             new CommentLexer(),
             new NewlineLexer(),
+            new WhitespaceLexer(),
+            new EqualsLexer(),
+            new IntegerLexer(),
+            new FloatLexer(),
+            new StringLexer(),
         ];
     }
 }
