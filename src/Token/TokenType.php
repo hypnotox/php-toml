@@ -34,7 +34,7 @@ enum TokenType
             TokenType::T_WHITESPACE => [' ', "\t"],
             TokenType::T_NEWLINE => ["\n", "\r\n"],
             TokenType::T_COMMENT => ['#'],
-            TokenType::T_EOF => [''],
+            TokenType::T_EOF => [],
         };
     }
 }

@@ -70,6 +70,7 @@ final class StreamTest extends BaseTest
         $this->assertSame(' ', $instance->consumeUntil(["\t"]));
         $this->assertSame("\t\n", $instance->consumeUntil(["\r\n"]));
         $this->assertSame("\r\n", $instance->consumeUntil(['😀']));
+        $this->assertSame('😀', $instance->consumeUntil(TokenType::T_EOF));
     }
 
     public function testConsumeUntilNot(): void
