@@ -1,4 +1,4 @@
-# hypnotox/toml
+# hypnotox/toml (WIP - Package is currently not stable)
 
 [![CI Status](https://github.com/hypnotox/php-toml/actions/workflows/ci.yml/badge.svg)](https://github.com/hypnotox/php-toml)
 [![Code Coverage](https://codecov.io/gh/hypnotox/php-toml/branch/main/graph/badge.svg?token=FrsdlOIbRo)](https://codecov.io/gh/hypnotox/php-toml)
