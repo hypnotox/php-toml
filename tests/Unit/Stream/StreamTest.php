@@ -47,6 +47,7 @@ final class StreamTest extends BaseTest
         $this->assertSame(0, $instance->seekUntil(['a']));
         $this->assertSame(9, $instance->seekUntil(['😀']));
         $this->assertSame(6, $instance->seekUntil(TokenType::T_NEWLINE));
+        $this->assertSame(10, $instance->seekUntil(['0']));
     }
 
     public function testSeekUntilNot(): void
