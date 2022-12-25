@@ -7,8 +7,6 @@ namespace HypnoTox\Toml\Tests\Unit\Lexer;
 use HypnoTox\Toml\Lexer\Lexer;
 use HypnoTox\Toml\Lexer\LexerInterface;
 use HypnoTox\Toml\Tests\Unit\BaseTest;
-use HypnoTox\Toml\Token\Token;
-use HypnoTox\Toml\Token\TokenType;
 
 final class LexerTest extends BaseTest
 {
@@ -33,40 +31,6 @@ final class LexerTest extends BaseTest
 
     public function tomlProvider(): array
     {
-        return [
-            // Comment
-            [
-                '# TEST',
-                [
-                    new Token(
-                        TokenType::T_COMMENT,
-                        '# TEST'
-                    ),
-                ],
-            ],
-            [
-                '# TEST # Foo',
-                [
-                    new Token(
-                        TokenType::T_COMMENT,
-                        '# TEST # Foo'
-                    ),
-                ],
-            ],
-            // Newline
-            [
-                "\n\r\n",
-                [
-                    new Token(
-                        TokenType::T_NEWLINE,
-                        "\n"
-                    ),
-                    new Token(
-                        TokenType::T_NEWLINE,
-                        "\r\n"
-                    ),
-                ],
-            ],
-        ];
+        return (new LexerProvider())->provide();
     }
 }
