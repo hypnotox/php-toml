@@ -7,6 +7,9 @@ namespace HypnoTox\Toml\Parser;
 use HypnoTox\Toml\Exception\AbstractParserException;
 use HypnoTox\Toml\TomlInterface;
 
+/**
+ * @internal
+ */
 interface ParserInterface
 {
     /**
