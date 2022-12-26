@@ -29,6 +29,11 @@ final class StringStream implements StringStreamInterface
         $this->length = mb_strlen($this->input, $this->encoding);
     }
 
+    public function getPointer(): int
+    {
+        return $this->pointer;
+    }
+
     public function peek(int $length = 1): string
     {
         return $this->getSubstring($length);

@@ -29,11 +29,6 @@ return (new PhpCsFixer\Config())
         'simplified_if_return'                             => true,
         'simplified_null_return'                           => true,
         'static_lambda'                                    => true,
-        'binary_operator_spaces'                           => [
-            'operators' => [
-                '=>' => 'align',
-            ],
-        ],
         'single_line_throw'                                => false,
         'fopen_flags'                                      => [
             'b_mode' => true,

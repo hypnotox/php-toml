@@ -38,6 +38,20 @@ final class LexerTest extends BaseTest
         $instance->tokenize(str_repeat('test = # FOO', 101));
     }
 
+    public function testTokenizeThrowsCorrectMessage(): void
+    {
+        $instance = new Lexer();
+
+        try {
+            $instance->tokenize(str_repeat('a', 101));
+        } catch (UnableToParseInputException $exception) {
+            $this->assertSame(
+                'Unexpected T_EOF, expected one of: T_KEY, T_QUOTED_KEY, T_WHITESPACE, T_DOT, T_EQUALS',
+                $exception->getMessage(),
+            );
+        }
+    }
+
     public function tomlProvider(): array
     {
         return (new LexerProvider())->provide();

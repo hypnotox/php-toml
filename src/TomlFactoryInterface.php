@@ -7,4 +7,6 @@ namespace HypnoTox\Toml;
 interface TomlFactoryInterface
 {
     public function make(array $data = []): TomlInterface;
+
+    public function fromString(string $input): TomlInterface;
 }

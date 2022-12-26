@@ -11,6 +11,8 @@ use HypnoTox\Toml\Parser\Token\TokenType;
  */
 interface StringStreamInterface
 {
+    public function getPointer(): int;
+
     public function peek(int $length = 1): string;
 
     public function peekMatching(string|TokenType $regex): string;

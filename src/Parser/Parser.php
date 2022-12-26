@@ -16,10 +16,13 @@ use HypnoTox\Toml\TomlInterface;
  */
 final class Parser implements ParserInterface
 {
-    public function __construct(
-        private readonly LexerInterface $lexer = new Lexer(),
-        private readonly TomlFactoryInterface $factory = new TomlFactory(),
-    ) {
+    private readonly LexerInterface $lexer;
+    private readonly TomlFactoryInterface $factory;
+
+    public function __construct()
+    {
+        $this->lexer = new Lexer();
+        $this->factory = new TomlFactory();
     }
 
     public function parse(string $input): TomlInterface

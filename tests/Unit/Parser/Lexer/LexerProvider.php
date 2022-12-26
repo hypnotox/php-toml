@@ -25,21 +25,11 @@ final class LexerProvider
         return [
             [
                 '# TEST',
-                [
-                    new Token(
-                        TokenType::T_COMMENT,
-                        '# TEST'
-                    ),
-                ],
+                [],
             ],
             [
                 '# TEST # Foo',
-                [
-                    new Token(
-                        TokenType::T_COMMENT,
-                        '# TEST # Foo'
-                    ),
-                ],
+                [],
             ],
         ];
     }
@@ -49,12 +39,7 @@ final class LexerProvider
         return [
             [
                 ' # TEST',
-                [
-                    new Token(
-                        TokenType::T_COMMENT,
-                        '# TEST'
-                    ),
-                ],
+                [],
             ],
         ];
     }
@@ -67,11 +52,15 @@ final class LexerProvider
                 [
                     new Token(
                         TokenType::T_NEWLINE,
-                        "\n"
+                        "\n",
+                        1,
+                        1,
                     ),
                     new Token(
                         TokenType::T_NEWLINE,
-                        "\r\n"
+                        "\r\n",
+                        2,
+                        1,
                     ),
                 ],
             ],
@@ -86,16 +75,16 @@ final class LexerProvider
                 "# TEST\n\r\n",
                 [
                     new Token(
-                        TokenType::T_COMMENT,
-                        '# TEST'
+                        TokenType::T_NEWLINE,
+                        "\n",
+                        1,
+                        7,
                     ),
                     new Token(
                         TokenType::T_NEWLINE,
-                        "\n"
-                    ),
-                    new Token(
-                        TokenType::T_NEWLINE,
-                        "\r\n"
+                        "\r\n",
+                        2,
+                        1,
                     ),
                 ],
             ],
@@ -103,24 +92,22 @@ final class LexerProvider
                 "# TEST\n\r\n# test\n",
                 [
                     new Token(
-                        TokenType::T_COMMENT,
-                        '# TEST'
+                        TokenType::T_NEWLINE,
+                        "\n",
+                        1,
+                        7,
                     ),
                     new Token(
                         TokenType::T_NEWLINE,
-                        "\n"
+                        "\r\n",
+                        2,
+                        1,
                     ),
                     new Token(
                         TokenType::T_NEWLINE,
-                        "\r\n"
-                    ),
-                    new Token(
-                        TokenType::T_COMMENT,
-                        '# test'
-                    ),
-                    new Token(
-                        TokenType::T_NEWLINE,
-                        "\n"
+                        "\n",
+                        3,
+                        7,
                     ),
                 ],
             ],
@@ -135,15 +122,21 @@ final class LexerProvider
                 [
                     new Token(
                         TokenType::T_KEY,
-                        'foo'
+                        'foo',
+                        1,
+                        1,
                     ),
                     new Token(
                         TokenType::T_EQUALS,
-                        '='
+                        '=',
+                        1,
+                        5,
                     ),
                     new Token(
                         TokenType::T_INTEGER,
-                        1
+                        1,
+                        1,
+                        7,
                     ),
                 ],
             ],
@@ -152,15 +145,21 @@ final class LexerProvider
                 [
                     new Token(
                         TokenType::T_KEY,
-                        'foo'
+                        'foo',
+                        1,
+                        1,
                     ),
                     new Token(
                         TokenType::T_EQUALS,
-                        '='
+                        '=',
+                        1,
+                        5,
                     ),
                     new Token(
                         TokenType::T_FLOAT,
-                        1.1
+                        1.1,
+                        1,
+                        7,
                     ),
                 ],
             ],
@@ -169,15 +168,21 @@ final class LexerProvider
                 [
                     new Token(
                         TokenType::T_KEY,
-                        'foo'
+                        'foo',
+                        1,
+                        1,
                     ),
                     new Token(
                         TokenType::T_EQUALS,
-                        '='
+                        '=',
+                        1,
+                        5,
                     ),
                     new Token(
                         TokenType::T_BASIC_STRING,
-                        'bar'
+                        'bar',
+                        1,
+                        7,
                     ),
                 ],
             ],
@@ -186,15 +191,21 @@ final class LexerProvider
                 [
                     new Token(
                         TokenType::T_KEY,
-                        1
+                        1,
+                        1,
+                        1,
                     ),
                     new Token(
                         TokenType::T_EQUALS,
-                        '='
+                        '=',
+                        1,
+                        3,
                     ),
                     new Token(
                         TokenType::T_BASIC_STRING,
-                        'bar'
+                        'bar',
+                        1,
+                        5,
                     ),
                 ],
             ],
@@ -203,15 +214,91 @@ final class LexerProvider
                 [
                     new Token(
                         TokenType::T_QUOTED_KEY,
-                        '"something"'
+                        '"something"',
+                        1,
+                        1,
                     ),
                     new Token(
                         TokenType::T_EQUALS,
-                        '='
+                        '=',
+                        1,
+                        13,
                     ),
                     new Token(
                         TokenType::T_BASIC_STRING,
-                        'bar'
+                        'bar',
+                        1,
+                        15,
+                    ),
+                ],
+            ],
+            [
+                '1.1 = 1.1',
+                [
+                    new Token(
+                        TokenType::T_KEY,
+                        '1',
+                        1,
+                        1,
+                    ),
+                    new Token(
+                        TokenType::T_DOT,
+                        '.',
+                        1,
+                        2,
+                    ),
+                    new Token(
+                        TokenType::T_KEY,
+                        '1',
+                        1,
+                        3,
+                    ),
+                    new Token(
+                        TokenType::T_EQUALS,
+                        '=',
+                        1,
+                        5,
+                    ),
+                    new Token(
+                        TokenType::T_FLOAT,
+                        '1.1',
+                        1,
+                        7,
+                    ),
+                ],
+            ],
+            [
+                '1."1" = 1.1',
+                [
+                    new Token(
+                        TokenType::T_KEY,
+                        '1',
+                        1,
+                        1,
+                    ),
+                    new Token(
+                        TokenType::T_DOT,
+                        '.',
+                        1,
+                        2,
+                    ),
+                    new Token(
+                        TokenType::T_QUOTED_KEY,
+                        '"1"',
+                        1,
+                        3,
+                    ),
+                    new Token(
+                        TokenType::T_EQUALS,
+                        '=',
+                        1,
+                        7,
+                    ),
+                    new Token(
+                        TokenType::T_FLOAT,
+                        '1.1',
+                        1,
+                        9,
                     ),
                 ],
             ],
