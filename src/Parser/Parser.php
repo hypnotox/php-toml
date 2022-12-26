@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser;
 
-use HypnoTox\Toml\Lexer\Lexer;
-use HypnoTox\Toml\Lexer\LexerInterface;
-use HypnoTox\Toml\Token\TokenInterface;
+use HypnoTox\Toml\Parser\Lexer\Lexer;
+use HypnoTox\Toml\Parser\Lexer\LexerInterface;
+use HypnoTox\Toml\Parser\Token\TokenInterface;
 use HypnoTox\Toml\TomlFactory;
 use HypnoTox\Toml\TomlFactoryInterface;
 use HypnoTox\Toml\TomlInterface;

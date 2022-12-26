@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Stream;
+namespace HypnoTox\Toml\Parser\Stream;
 
 use HypnoTox\Toml\Exception\EncodingException;
-use HypnoTox\Toml\Token\TokenType;
+use HypnoTox\Toml\Parser\Token\TokenType;
 
 /**
  * @internal
  */
-final class Stream implements StreamInterface
+final class StringStream implements StringStreamInterface
 {
     private readonly int $length;
 
@@ -41,7 +41,7 @@ final class Stream implements StreamInterface
 
         preg_match("~^$regex~u", $this->getSubstring(), $matches);
 
-        if ($matches !== []) {
+        if ([] !== $matches) {
             return $matches[0];
         }
 
@@ -64,7 +64,7 @@ final class Stream implements StreamInterface
 
         preg_match("~^$regex~u", $this->getSubstring(), $matches);
 
-        if ($matches !== []) {
+        if ([] !== $matches) {
             $matched = $matches[0];
             $this->consume(mb_strlen($matched));
 
@@ -78,7 +78,7 @@ final class Stream implements StreamInterface
     {
         $regex = $regex instanceof TokenType ? $regex->getRegex() : $regex;
 
-        return preg_match("~^$regex~u", $this->getSubstring()) === 1;
+        return 1 === preg_match("~^$regex~u", $this->getSubstring());
     }
 
     public function isEndOfFile(): bool

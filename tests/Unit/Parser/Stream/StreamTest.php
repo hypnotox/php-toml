@@ -2,31 +2,31 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Tests\Unit\Stream;
+namespace HypnoTox\Toml\Tests\Unit\Parser\Stream;
 
 use HypnoTox\Toml\Exception\EncodingException;
-use HypnoTox\Toml\Stream\Stream;
-use HypnoTox\Toml\Stream\StreamInterface;
+use HypnoTox\Toml\Parser\Stream\StringStream;
+use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
+use HypnoTox\Toml\Parser\Token\TokenType;
 use HypnoTox\Toml\Tests\Unit\BaseTest;
-use HypnoTox\Toml\Token\TokenType;
 use ReflectionMethod;
 
 final class StreamTest extends BaseTest
 {
     public function testConstruct(): void
     {
-        $instance = new Stream('test');
+        $instance = new StringStream('test');
 
-        $this->assertInstanceOf(Stream::class, $instance);
-        $this->assertInstanceOf(StreamInterface::class, $instance);
+        $this->assertInstanceOf(StringStream::class, $instance);
+        $this->assertInstanceOf(StringStreamInterface::class, $instance);
 
         $this->expectException(EncodingException::class);
-        new Stream(utf8_decode("\x5A\x6F\xC3\xAB"));
+        new StringStream(utf8_decode("\x5A\x6F\xC3\xAB"));
     }
 
     public function testPeakConsumeAndEndOfFile(): void
     {
-        $instance = new Stream("foo \t\n\r\n😀");
+        $instance = new StringStream("foo \t\n\r\n😀");
 
         $this->assertSame('f', $instance->peek());
         $this->assertSame('foo', $instance->peek(3));
@@ -41,7 +41,7 @@ final class StreamTest extends BaseTest
 
     public function testPeakMatchingAndConsumeMatching(): void
     {
-        $instance = new Stream("foo \t\n\r\n");
+        $instance = new StringStream("foo \t\n\r\n");
 
         $this->assertSame('foo', $instance->peekMatching(TokenType::T_BASIC_STRING));
         $this->assertSame('foo', $instance->consumeMatching(TokenType::T_BASIC_STRING));
@@ -55,14 +55,14 @@ final class StreamTest extends BaseTest
     public function testGetSubstring(): void
     {
         $string = "abcd \t\n\r\n😀";
-        $method = new ReflectionMethod(Stream::class, 'getSubstring');
+        $method = new ReflectionMethod(StringStream::class, 'getSubstring');
 
-        $this->assertSame($string, $method->invoke(new Stream($string)));
-        $this->assertSame('abcd', $method->invoke(new Stream($string), 4));
-        $this->assertSame("\t\n\r\n😀", $method->invoke(new Stream($string, 5)));
-        $this->assertSame("\t\n\r\n", $method->invoke(new Stream($string, 5), 4));
-        $this->assertSame('a', $method->invoke(new Stream($string), 1));
-        $this->assertSame('b', $method->invoke(new Stream($string), 1, 1));
-        $this->assertSame("\t", $method->invoke(new Stream($string, 5), 1));
+        $this->assertSame($string, $method->invoke(new StringStream($string)));
+        $this->assertSame('abcd', $method->invoke(new StringStream($string), 4));
+        $this->assertSame("\t\n\r\n😀", $method->invoke(new StringStream($string, 5)));
+        $this->assertSame("\t\n\r\n", $method->invoke(new StringStream($string, 5), 4));
+        $this->assertSame('a', $method->invoke(new StringStream($string), 1));
+        $this->assertSame('b', $method->invoke(new StringStream($string), 1, 1));
+        $this->assertSame("\t", $method->invoke(new StringStream($string, 5), 1));
     }
 }

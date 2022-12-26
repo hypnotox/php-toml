@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Tests;
 
-use HypnoTox\Toml\Lexer\Lexer;
+use HypnoTox\Toml\Parser\Lexer\Lexer;
 use HypnoTox\Toml\Parser\Parser;
+use Throwable;
+
+use const STDIN;
 
 include 'vendor/autoload.php';
 
-stream_set_blocking(\STDIN, false);
-$data = stream_get_contents(\STDIN);
+stream_set_blocking(STDIN, false);
+$data = stream_get_contents(STDIN);
 
 $parser = new Parser(
     new Lexer(),
@@ -18,7 +21,7 @@ $parser = new Parser(
 
 try {
     echo $parser->parse($data)->toJson();
-} catch (\Throwable $e) {
+} catch (Throwable $e) {
     exit(1);
 }
 

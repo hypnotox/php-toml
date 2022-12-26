@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Stream;
+namespace HypnoTox\Toml\Parser\Stream;
 
-use HypnoTox\Toml\Token\TokenType;
+use HypnoTox\Toml\Parser\Token\TokenType;
 
 /**
  * @internal
  */
-interface StreamInterface
+interface StringStreamInterface
 {
     public function peek(int $length = 1): string;
 

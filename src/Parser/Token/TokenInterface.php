@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Token;
+namespace HypnoTox\Toml\Parser\Token;
 
 interface TokenInterface
 {

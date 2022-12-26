@@ -1,8 +1,10 @@
 <?php
 
-namespace HypnoTox\Toml\Token;
+declare(strict_types=1);
 
-class Token implements TokenInterface
+namespace HypnoTox\Toml\Parser\Token;
+
+final class Token implements TokenInterface
 {
     public function __construct(
         private readonly TokenType $type,
@@ -10,9 +12,6 @@ class Token implements TokenInterface
     ) {
     }
 
-    /**
-     * @return TokenType
-     */
     public function getType(): TokenType
     {
         return $this->type;

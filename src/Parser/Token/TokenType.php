@@ -2,14 +2,9 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Token;
+namespace HypnoTox\Toml\Parser\Token;
 
-use HypnoTox\Toml\Stream\StreamInterface;
-
-use const T_ARRAY;
-use const T_COMMENT;
-use const T_STRING;
-use const T_WHITESPACE;
+use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
 
 enum TokenType
 {
@@ -22,7 +17,6 @@ enum TokenType
     case T_INTEGER;
     case T_BASIC_STRING;
     case T_QUOTED_STRING;
-
 //    case T_FLOAT;
 //    case T_BOOLEAN;
 //    case T_DATETIME;
@@ -56,10 +50,10 @@ enum TokenType
         ];
     }
 
-    public function matches(StreamInterface $stream): bool
+    public function matches(StringStreamInterface $stream): bool
     {
         return match ($this) {
-            self::T_FLOAT => (function (StreamInterface $stream): bool {
+            self::T_FLOAT => (function (StringStreamInterface $stream): bool {
                 if (!$stream->matches($this)) {
                     return false;
                 }
@@ -72,9 +66,6 @@ enum TokenType
         };
     }
 
-    /**
-     * @return string
-     */
     public function getRegex(): string
     {
         return match ($this) {
@@ -82,9 +73,9 @@ enum TokenType
             self::T_COMMENT => '(#.*)',
             self::T_KEY, self::T_BASIC_STRING => '([a-zA-Z0-9_\-]+)',
             self::T_QUOTED_KEY, self::T_QUOTED_STRING => '("[\s\d\w\b"\\\.\']+")',
-            self::T_EQUALS => '(=)',
-            self::T_FLOAT => '([+-]?(\d+([.]\d*)?([eE][+-]?\d+)?|[.]\d+([eE][+-]?\d+)?))',
-            self::T_INTEGER => '([0-9]+)',
+            self::T_EQUALS     => '(=)',
+            self::T_FLOAT      => '([+-]?(\d+([.]\d*)?([eE][+-]?\d+)?|[.]\d+([eE][+-]?\d+)?))',
+            self::T_INTEGER    => '([0-9]+)',
         };
     }
 

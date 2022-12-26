@@ -1,11 +1,13 @@
 <?php
 
-namespace HypnoTox\Toml\Tests\Unit\Lexer;
+declare(strict_types=1);
 
-use HypnoTox\Toml\Token\Token;
-use HypnoTox\Toml\Token\TokenType;
+namespace HypnoTox\Toml\Tests\Unit\Parser\Lexer;
 
-class LexerProvider
+use HypnoTox\Toml\Parser\Token\Token;
+use HypnoTox\Toml\Parser\Token\TokenType;
+
+final class LexerProvider
 {
     public function provide(): array
     {
@@ -129,7 +131,7 @@ class LexerProvider
     {
         return [
             [
-                "foo=1",
+                'foo = 1',
                 [
                     new Token(
                         TokenType::T_KEY,
@@ -146,7 +148,7 @@ class LexerProvider
                 ],
             ],
             [
-                "foo=1.1",
+                'foo = 1.1',
                 [
                     new Token(
                         TokenType::T_KEY,
@@ -163,7 +165,7 @@ class LexerProvider
                 ],
             ],
             [
-                "foo=bar",
+                'foo = bar',
                 [
                     new Token(
                         TokenType::T_KEY,
@@ -180,7 +182,7 @@ class LexerProvider
                 ],
             ],
             [
-                "1=bar",
+                '1 = bar',
                 [
                     new Token(
                         TokenType::T_KEY,
@@ -197,7 +199,7 @@ class LexerProvider
                 ],
             ],
             [
-                "\"something\"=bar",
+                '"something" = bar',
                 [
                     new Token(
                         TokenType::T_QUOTED_KEY,

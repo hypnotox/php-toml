@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace HypnoTox\Toml\Tests\Unit\Lexer;
+namespace HypnoTox\Toml\Tests\Unit\Parser\Lexer;
 
 use HypnoTox\Toml\Exception\UnableToParseInputException;
-use HypnoTox\Toml\Lexer\Lexer;
-use HypnoTox\Toml\Lexer\LexerInterface;
+use HypnoTox\Toml\Parser\Lexer\Lexer;
+use HypnoTox\Toml\Parser\Lexer\LexerInterface;
 use HypnoTox\Toml\Tests\Unit\BaseTest;
 
 final class LexerTest extends BaseTest
