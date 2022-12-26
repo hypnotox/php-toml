@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Token;
 
+use HypnoTox\Toml\Stream\StreamInterface;
+
 use const T_ARRAY;
 use const T_COMMENT;
 use const T_STRING;
@@ -11,16 +13,15 @@ use const T_WHITESPACE;
 
 enum TokenType
 {
-    case T_WHITESPACE;
     case T_NEWLINE;
     case T_COMMENT;
-    case T_EOF;
+    case T_KEY;
+    case T_QUOTED_KEY;
     case T_EQUALS;
-    case T_DOUBLE_QUOTE;
-    case T_SINGLE_QUOTE;
-    case T_INTEGER;
     case T_FLOAT;
-    case T_STRING;
+    case T_INTEGER;
+    case T_BASIC_STRING;
+    case T_QUOTED_STRING;
 
 //    case T_FLOAT;
 //    case T_BOOLEAN;
@@ -30,33 +31,73 @@ enum TokenType
 //    case T_INLINE_TABLE;
 
     /**
-     * @return string[]
+     * @return self[]
      */
-    public function getCharacters(): array
+    public static function getDefaultTokens(): array
     {
-        $lowercase = range('a', 'z');
-        $uppercase = range('A', 'Z');
-        $numbers = array_map(fn (int $number): string => (string) $number, range(0, 9));
+        return [
+            self::T_NEWLINE,
+            self::T_COMMENT,
+            self::T_QUOTED_KEY,
+            self::T_KEY,
+        ];
+    }
 
+    /**
+     * @return TokenType[]
+     */
+    public static function getValueTokens(): array
+    {
+        return [
+            self::T_FLOAT,
+            self::T_INTEGER,
+            self::T_BASIC_STRING,
+            self::T_QUOTED_STRING,
+        ];
+    }
+
+    public function matches(StreamInterface $stream): bool
+    {
         return match ($this) {
-            TokenType::T_WHITESPACE => [' ', "\t"],
-            TokenType::T_NEWLINE => ["\n", "\r\n"],
-            TokenType::T_COMMENT => ['#'],
-            TokenType::T_EOF => [],
-            TokenType::T_EQUALS => ['='],
-            TokenType::T_DOUBLE_QUOTE => ['"'],
-            TokenType::T_SINGLE_QUOTE => ['\''],
-            TokenType::T_INTEGER => $numbers,
-            TokenType::T_FLOAT => [
-                ...$numbers,
-                ...mb_str_split('.+-eE'),
-            ],
-            TokenType::T_STRING => [
-                ...$lowercase,
-                ...$uppercase,
-                ...$numbers,
-                ...['_', '-'],
-            ], // mb_str_split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-')
+            self::T_FLOAT => (function (StreamInterface $stream): bool {
+                if (!$stream->matches($this)) {
+                    return false;
+                }
+
+                $match = $stream->peekMatching($this);
+
+                return (int) $match != (float) $match;
+            })($stream),
+            default => $stream->matches($this),
+        };
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegex(): string
+    {
+        return match ($this) {
+            self::T_NEWLINE => '(\R)',
+            self::T_COMMENT => '(#.*)',
+            self::T_KEY, self::T_BASIC_STRING => '([a-zA-Z0-9_\-]+)',
+            self::T_QUOTED_KEY, self::T_QUOTED_STRING => '("[\s\d\w\b"\\\.\']+")',
+            self::T_EQUALS => '(=)',
+            self::T_FLOAT => '([+-]?(\d+([.]\d*)?([eE][+-]?\d+)?|[.]\d+([eE][+-]?\d+)?))',
+            self::T_INTEGER => '([0-9]+)',
+        };
+    }
+
+    /**
+     * @return self[]
+     */
+    public function getExpectedTokens(): array
+    {
+        return match ($this) {
+            self::T_KEY, self::T_QUOTED_KEY => [self::T_EQUALS],
+            self::T_EQUALS => [...self::getValueTokens()],
+            self::T_INTEGER, self::T_FLOAT, self::T_BASIC_STRING, self::T_QUOTED_STRING => [self::T_NEWLINE, self::T_COMMENT],
+            default => self::getDefaultTokens(),
         };
     }
 }

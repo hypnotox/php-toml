@@ -13,27 +13,13 @@ interface StreamInterface
 {
     public function peek(int $length = 1): string;
 
-    /**
-     * @param string[]|TokenType $characters
-     */
-    public function seekUntil(array|TokenType $characters): int;
-
-    /**
-     * @param string[]|TokenType $characters
-     */
-    public function seekUntilNot(array|TokenType $characters): int;
+    public function peekMatching(string|TokenType $regex): string;
 
     public function consume(int $length = 1): string;
 
-    /**
-     * @param string[]|TokenType $characters
-     */
-    public function consumeUntil(array|TokenType $characters): string;
+    public function consumeMatching(string|TokenType $regex): string;
 
-    /**
-     * @param string[]|TokenType $characters
-     */
-    public function consumeUntilNot(array|TokenType $characters): string;
+    public function matches(string|TokenType $regex): bool;
 
     public function isEndOfFile(): bool;
 }

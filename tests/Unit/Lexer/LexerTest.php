@@ -32,10 +32,10 @@ final class LexerTest extends BaseTest
 
     public function testTokenizeThrowsIfUnableToTokenize(): void
     {
-        $instance = new Lexer([]);
+        $instance = new Lexer();
 
         $this->expectException(UnableToParseInputException::class);
-        $instance->tokenize(str_repeat('#', 101));
+        $instance->tokenize(str_repeat('test = # FOO', 101));
     }
 
     public function tomlProvider(): array

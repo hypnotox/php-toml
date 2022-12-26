@@ -34,51 +34,18 @@ final class Stream implements StreamInterface
         return $this->getSubstring($length);
     }
 
-    public function seekUntil(array|TokenType $characters): int
+    public function peekMatching(string|TokenType $regex): string
     {
-        $characters = $characters instanceof TokenType ? $characters->getCharacters() : $characters;
-        $offset = $this->length - $this->pointer;
-        $string = $this->getSubstring();
+        $regex = $regex instanceof TokenType ? $regex->getRegex() : $regex;
+        $matches = [];
 
-        foreach ($characters as $seekUnit) {
-            $position = mb_strpos($string, $seekUnit);
+        preg_match("~^$regex~u", $this->getSubstring(), $matches);
 
-            if (false !== $position) {
-                $offset = min($offset, $position);
-            }
+        if ($matches !== []) {
+            return $matches[0];
         }
 
-        return $offset;
-    }
-
-    public function seekUntilNot(array|TokenType $characters): int
-    {
-        $characters = $characters instanceof TokenType ? $characters->getCharacters() : $characters;
-        $buckets = [];
-
-        foreach ($characters as $character) {
-            $length = mb_strlen($character);
-
-            if (!array_key_exists($length, $buckets)) {
-                $buckets[$length] = [];
-            }
-
-            $buckets[$length][] = $character;
-        }
-
-        $maxOffset = $this->length - $this->pointer;
-
-        for ($offset = 0; $offset < $maxOffset; $offset++) {
-            foreach ($buckets as $length => $bucket) {
-                if (in_array($this->getSubstring($length, $offset), $bucket, true)) {
-                    continue 2;
-                }
-            }
-
-            return $offset;
-        }
-
-        return $maxOffset;
+        return '';
     }
 
     public function consume(int $length = 1): string
@@ -90,14 +57,28 @@ final class Stream implements StreamInterface
         return $result;
     }
 
-    public function consumeUntil(array|TokenType $characters): string
+    public function consumeMatching(string|TokenType $regex): string
     {
-        return $this->consume($this->seekUntil($characters));
+        $regex = $regex instanceof TokenType ? $regex->getRegex() : $regex;
+        $matches = [];
+
+        preg_match("~^$regex~u", $this->getSubstring(), $matches);
+
+        if ($matches !== []) {
+            $matched = $matches[0];
+            $this->consume(mb_strlen($matched));
+
+            return $matched;
+        }
+
+        return '';
     }
 
-    public function consumeUntilNot(array|TokenType $characters): string
+    public function matches(string|TokenType $regex): bool
     {
-        return $this->consume($this->seekUntilNot($characters));
+        $regex = $regex instanceof TokenType ? $regex->getRegex() : $regex;
+
+        return preg_match("~^$regex~u", $this->getSubstring()) === 1;
     }
 
     public function isEndOfFile(): bool

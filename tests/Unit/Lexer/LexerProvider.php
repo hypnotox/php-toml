@@ -129,10 +129,10 @@ class LexerProvider
     {
         return [
             [
-                "foo = 1",
+                "foo=1",
                 [
                     new Token(
-                        TokenType::T_STRING,
+                        TokenType::T_KEY,
                         'foo'
                     ),
                     new Token(
@@ -146,10 +146,10 @@ class LexerProvider
                 ],
             ],
             [
-                "foo = 1.1",
+                "foo=1.1",
                 [
                     new Token(
-                        TokenType::T_STRING,
+                        TokenType::T_KEY,
                         'foo'
                     ),
                     new Token(
@@ -163,10 +163,10 @@ class LexerProvider
                 ],
             ],
             [
-                "foo = bar",
+                "foo=bar",
                 [
                     new Token(
-                        TokenType::T_STRING,
+                        TokenType::T_KEY,
                         'foo'
                     ),
                     new Token(
@@ -174,16 +174,16 @@ class LexerProvider
                         '='
                     ),
                     new Token(
-                        TokenType::T_STRING,
+                        TokenType::T_BASIC_STRING,
                         'bar'
                     ),
                 ],
             ],
             [
-                "1 = bar",
+                "1=bar",
                 [
                     new Token(
-                        TokenType::T_INTEGER,
+                        TokenType::T_KEY,
                         1
                     ),
                     new Token(
@@ -191,24 +191,24 @@ class LexerProvider
                         '='
                     ),
                     new Token(
-                        TokenType::T_STRING,
+                        TokenType::T_BASIC_STRING,
                         'bar'
                     ),
                 ],
             ],
             [
-                "1.1 = bar",
+                "\"something\"=bar",
                 [
                     new Token(
-                        TokenType::T_FLOAT,
-                        1.1
+                        TokenType::T_QUOTED_KEY,
+                        '"something"'
                     ),
                     new Token(
                         TokenType::T_EQUALS,
                         '='
                     ),
                     new Token(
-                        TokenType::T_STRING,
+                        TokenType::T_BASIC_STRING,
                         'bar'
                     ),
                 ],
