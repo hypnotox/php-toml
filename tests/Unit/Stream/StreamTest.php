@@ -8,6 +8,7 @@ use HypnoTox\Toml\Exception\EncodingException;
 use HypnoTox\Toml\Stream\Stream;
 use HypnoTox\Toml\Stream\StreamInterface;
 use HypnoTox\Toml\Tests\Unit\BaseTest;
+use HypnoTox\Toml\Token\TokenType;
 use ReflectionMethod;
 
 final class StreamTest extends BaseTest
@@ -35,6 +36,19 @@ final class StreamTest extends BaseTest
         $this->assertSame("\t\n\r\n", $instance->consume(4));
         $this->assertSame('😀', $instance->peek());
         $this->assertSame('😀', $instance->consume());
+        $this->assertTrue($instance->isEndOfFile());
+    }
+
+    public function testPeakMatchingAndConsumeMatching(): void
+    {
+        $instance = new Stream("foo \t\n\r\n");
+
+        $this->assertSame('foo', $instance->peekMatching(TokenType::T_BASIC_STRING));
+        $this->assertSame('foo', $instance->consumeMatching(TokenType::T_BASIC_STRING));
+        $this->assertSame('', $instance->peekMatching(TokenType::T_BASIC_STRING));
+        $this->assertSame(" \t", $instance->consumeMatching("( \t)+"));
+        $this->assertSame("\n", $instance->consumeMatching(TokenType::T_NEWLINE));
+        $this->assertSame("\r\n", $instance->consumeMatching(TokenType::T_NEWLINE));
         $this->assertTrue($instance->isEndOfFile());
     }
 
