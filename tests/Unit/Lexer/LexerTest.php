@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Tests\Unit\Lexer;
 
+use HypnoTox\Toml\Exception\UnableToParseInputException;
 use HypnoTox\Toml\Lexer\Lexer;
 use HypnoTox\Toml\Lexer\LexerInterface;
 use HypnoTox\Toml\Tests\Unit\BaseTest;
@@ -27,6 +28,14 @@ final class LexerTest extends BaseTest
         $result = $instance->tokenize($toml);
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testTokenizeThrowsIfUnableToTokenize(): void
+    {
+        $instance = new Lexer([]);
+
+        $this->expectException(UnableToParseInputException::class);
+        $instance->tokenize(str_repeat('#', 101));
     }
 
     public function tomlProvider(): array

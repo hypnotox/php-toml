@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Tests\Unit\Stream;
 
 use HypnoTox\Toml\Exception\EncodingException;
-use HypnoTox\Toml\Stream\StreamInterface;
 use HypnoTox\Toml\Stream\Stream;
+use HypnoTox\Toml\Stream\StreamInterface;
 use HypnoTox\Toml\Tests\Unit\BaseTest;
 use HypnoTox\Toml\Token\TokenType;
+use ReflectionMethod;
 
 final class StreamTest extends BaseTest
 {
@@ -60,6 +61,7 @@ final class StreamTest extends BaseTest
         $this->assertSame(5, $instance->seekUntilNot(mb_str_split('abcd ')));
         $instance->consumeUntilNot(mb_str_split("abcd \t"));
         $this->assertSame(3, $instance->seekUntilNot(TokenType::T_NEWLINE));
+        $this->assertSame(0, (new Stream(''))->seekUntilNot([' ']));
     }
 
     public function testConsumeUntil(): void
@@ -85,7 +87,7 @@ final class StreamTest extends BaseTest
     public function testGetSubstring(): void
     {
         $string = "abcd \t\n\r\n😀";
-        $method = new \ReflectionMethod(Stream::class, 'getSubstring');
+        $method = new ReflectionMethod(Stream::class, 'getSubstring');
 
         $this->assertSame($string, $method->invoke(new Stream($string)));
         $this->assertSame('abcd', $method->invoke(new Stream($string), 4));

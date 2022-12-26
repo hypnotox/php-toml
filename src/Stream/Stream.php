@@ -68,7 +68,7 @@ final class Stream implements StreamInterface
 
         $maxOffset = $this->length - $this->pointer;
 
-        for ($offset = 0; $offset <= $maxOffset; $offset++) {
+        for ($offset = 0; $offset < $maxOffset; $offset++) {
             foreach ($buckets as $length => $bucket) {
                 if (in_array($this->getSubstring($length, $offset), $bucket, true)) {
                     continue 2;

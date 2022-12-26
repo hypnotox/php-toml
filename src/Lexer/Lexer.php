@@ -24,6 +24,28 @@ use HypnoTox\Toml\Token\TokenType;
 final class Lexer implements LexerInterface
 {
     /**
+     * @var TokenLexerInterface[]
+     */
+    private readonly array $tokenLexer;
+
+    /**
+     * @param TokenLexerInterface[]|null $tokenLexer
+     */
+    public function __construct(
+        array $tokenLexer = null,
+    ) {
+        $this->tokenLexer = $tokenLexer ?? [
+            new CommentLexer(),
+            new NewlineLexer(),
+            new WhitespaceLexer(),
+            new EqualsLexer(),
+            new IntegerLexer(),
+            new FloatLexer(),
+            new StringLexer(),
+        ];
+    }
+
+    /**
      * @throws EncodingException|UnableToParseInputException
      */
     public function tokenize(string|Stream $input): array
@@ -31,10 +53,9 @@ final class Lexer implements LexerInterface
         /** @var TokenInterface[] $tokens */
         $tokens = [];
         $stream = $input instanceof Stream ? $input : new Stream($input);
-        $tokenLexer = $this->getTokenLexer();
 
         while (!$stream->isEndOfFile()) {
-            foreach ($tokenLexer as $lexer) {
+            foreach ($this->tokenLexer as $lexer) {
                 if ($lexer->canTokenize($stream)) {
                     $tokens = [...$tokens, ...$lexer->tokenize($stream)];
                     continue 2;
@@ -51,21 +72,5 @@ final class Lexer implements LexerInterface
         }
 
         return $tokens;
-    }
-
-    /**
-     * @return TokenLexerInterface[]
-     */
-    private function getTokenLexer(): array
-    {
-        return [
-            new CommentLexer(),
-            new NewlineLexer(),
-            new WhitespaceLexer(),
-            new EqualsLexer(),
-            new IntegerLexer(),
-            new FloatLexer(),
-            new StringLexer(),
-        ];
     }
 }
