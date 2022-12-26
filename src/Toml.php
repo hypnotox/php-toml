@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml;
 
-use const JSON_THROW_ON_ERROR;
 use JsonException;
 
 /**
@@ -38,6 +37,6 @@ final class Toml implements TomlInterface
     public function toJson(): string
     {
         // TODO: Implement JSON string representation according to TOML test suite
-        return json_encode($this->data, JSON_THROW_ON_ERROR);
+        return json_encode($this->data, \JSON_THROW_ON_ERROR);
     }
 }

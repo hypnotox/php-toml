@@ -23,7 +23,7 @@ return (new PhpCsFixer\Config())
         'control_structure_continuation_position'          => true,
         'date_time_immutable'                              => true,
         'declare_parentheses'                              => true,
-        'global_namespace_import'                          => ['import_classes' => true, 'import_constants' => true, 'import_functions' => true],
+        'global_namespace_import'                          => ['import_classes' => true, 'import_constants' => false, 'import_functions' => false],
         'nullable_type_declaration_for_default_null_value' => ['use_nullable_type_declaration' => false],
         'self_static_accessor'                             => true,
         'simplified_if_return'                             => true,

@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Tests\Unit\Parser;
 
-use const DIRECTORY_SEPARATOR;
 use Generator;
 use HypnoTox\Toml\Parser\Parser;
 use HypnoTox\Toml\Tests\Unit\BaseTest;
-use function in_array;
 
 final class ParserTest extends BaseTest
 {
@@ -66,21 +64,21 @@ final class ParserTest extends BaseTest
         $directoryIterator = scandir($directory);
 
         foreach ($directoryIterator as $value) {
-            if (in_array($value, ['.', '..'])) {
+            if (\in_array($value, ['.', '..'])) {
                 continue;
             }
 
-            if (is_dir($directory.DIRECTORY_SEPARATOR.$value)) {
-                yield from $this->generateFromDirectory($directory.DIRECTORY_SEPARATOR.$value, $withJson);
+            if (is_dir($directory.\DIRECTORY_SEPARATOR.$value)) {
+                yield from $this->generateFromDirectory($directory.\DIRECTORY_SEPARATOR.$value, $withJson);
             } elseif (str_ends_with($value, '.toml')) {
                 if ($withJson) {
                     yield [
-                        file_get_contents($directory.DIRECTORY_SEPARATOR.$value),
-                        file_get_contents($directory.DIRECTORY_SEPARATOR.str_replace('.toml', '.json', $value)),
+                        file_get_contents($directory.\DIRECTORY_SEPARATOR.$value),
+                        file_get_contents($directory.\DIRECTORY_SEPARATOR.str_replace('.toml', '.json', $value)),
                     ];
                 } else {
                     yield [
-                        file_get_contents($directory.DIRECTORY_SEPARATOR.$value),
+                        file_get_contents($directory.\DIRECTORY_SEPARATOR.$value),
                     ];
                 }
             }
