@@ -53,6 +53,7 @@
 		"fix-verbose": "@fix -vvv",
 		"lint-ci": "vendor/bin/psalm --no-cache",
 		"lint": "@lint-ci --output-format=phpstorm",
-		"lint-verbose": "@lint --show-info=true"
+		"lint-verbose": "@lint --show-info=true",
+		"conformance": "tests/run.sh"
 	}
 }

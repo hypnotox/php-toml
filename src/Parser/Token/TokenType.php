@@ -4,67 +4,50 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\Token;
 
-use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
-
 /**
  * @internal
+ *
+ * @psalm-api
  */
 enum TokenType
 {
+    // Structure
+    case T_LEFT_BRACKET;
+    case T_RIGHT_BRACKET;
+    case T_DOUBLE_LEFT_BRACKET;
+    case T_DOUBLE_RIGHT_BRACKET;
+    case T_LEFT_BRACE;
+    case T_RIGHT_BRACE;
+    case T_EQUALS;
+    case T_DOT;
+    case T_COMMA;
+
+    // String values
+    case T_BASIC_STRING;
+    case T_LITERAL_STRING;
+    case T_ML_BASIC_STRING;
+    case T_ML_LITERAL_STRING;
+
+    // Numeric values
+    case T_INTEGER;
+    case T_HEX_INTEGER;
+    case T_OCT_INTEGER;
+    case T_BIN_INTEGER;
+    case T_FLOAT;
+    case T_BOOL;
+
+    // Datetime values
+    case T_OFFSET_DATETIME;
+    case T_LOCAL_DATETIME;
+    case T_LOCAL_DATE;
+    case T_LOCAL_TIME;
+
+    // Keys
+    case T_BARE_KEY;
+
+    // Whitespace & control
     case T_NEWLINE;
     case T_WHITESPACE;
     case T_COMMENT;
     case T_EOF;
-    case T_KEY;
-    case T_QUOTED_KEY;
-    case T_DOT;
-    case T_EQUALS;
-    case T_FLOAT;
-    case T_INTEGER;
-    case T_BASIC_STRING;
-    case T_QUOTED_STRING;
-
-    public function matches(StringStreamInterface $stream): bool
-    {
-        return match ($this) {
-            self::T_FLOAT => (function (StringStreamInterface $stream): bool {
-                if (!$stream->matches($this)) {
-                    return false;
-                }
-
-                $match = $stream->peekMatching($this);
-
-                return (int) $match != (float) $match;
-            }
-            )(
-                $stream
-            ),
-            self::T_EOF => $stream->isEndOfFile(),
-            default => $stream->matches($this),
-        };
-    }
-
-    public function getRegex(): string
-    {
-        return match ($this) {
-            self::T_NEWLINE => '(\R)',
-            self::T_WHITESPACE => '([ \t]+)',
-            self::T_COMMENT => '(#.*)',
-            self::T_EOF     => '$',
-            self::T_KEY, self::T_BASIC_STRING => '([a-zA-Z0-9_\-]+)',
-            self::T_QUOTED_KEY, self::T_QUOTED_STRING => '("[\s\d\w\b"\\\.\']+")',
-            self::T_DOT     => '(\.)',
-            self::T_EQUALS  => '(=)',
-            self::T_FLOAT   => '([+-]?(\d+([.]\d*)?([eE][+-]?\d+)?|[.]\d+([eE][+-]?\d+)?))',
-            self::T_INTEGER => '([0-9]+)',
-        };
-    }
-
-    public function shouldAddToken(): bool
-    {
-        return match ($this) {
-            self::T_EOF, self::T_WHITESPACE, self::T_COMMENT => false,
-            default => true,
-        };
-    }
 }

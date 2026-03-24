@@ -7,12 +7,13 @@ namespace HypnoTox\Toml;
 use HypnoTox\Toml\Parser\Parser;
 use Override;
 
+/** @psalm-api */
 final class TomlFactory implements TomlFactoryInterface
 {
     #[Override]
-    public function make(array $data = []): TomlInterface
+    public function make(): TomlInterface
     {
-        return new Toml($data);
+        return new Toml();
     }
 
     #[Override]

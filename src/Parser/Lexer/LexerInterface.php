@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\Lexer;
 
-use HypnoTox\Toml\Parser\Stream\StringStream;
-use HypnoTox\Toml\Parser\Token\TokenInterface;
+use HypnoTox\Toml\Parser\Token\Token;
 
 /**
  * @internal
  */
 interface LexerInterface
 {
-    /**
-     * @return TokenInterface[]
-     */
-    public function tokenize(string|StringStream $input): array;
+    public function next(LexerContext $context): Token;
+
+    public function peek(LexerContext $context): Token;
 }
