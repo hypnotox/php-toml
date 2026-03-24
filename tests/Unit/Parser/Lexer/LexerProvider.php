@@ -9,18 +9,18 @@ use HypnoTox\Toml\Parser\Token\TokenType;
 
 final class LexerProvider
 {
-    public function provide(): array
+    public static function provide(): array
     {
         return [
-            ...$this->provideComments(),
-            ...$this->provideWhitespace(),
-            ...$this->provideNewline(),
-            ...$this->provideMixed(),
-            ...$this->provideSimpleKeyValue(),
+            ...self::provideComments(),
+            ...self::provideWhitespace(),
+            ...self::provideNewline(),
+            ...self::provideMixed(),
+            ...self::provideSimpleKeyValue(),
         ];
     }
 
-    private function provideComments(): array
+    private static function provideComments(): array
     {
         return [
             [
@@ -34,7 +34,7 @@ final class LexerProvider
         ];
     }
 
-    private function provideWhitespace(): array
+    private static function provideWhitespace(): array
     {
         return [
             [
@@ -44,7 +44,7 @@ final class LexerProvider
         ];
     }
 
-    private function provideNewline(): array
+    private static function provideNewline(): array
     {
         return [
             [
@@ -67,7 +67,7 @@ final class LexerProvider
         ];
     }
 
-    private function provideMixed(): array
+    private static function provideMixed(): array
     {
         return [
             // Comment & Newline
@@ -114,7 +114,7 @@ final class LexerProvider
         ];
     }
 
-    private function provideSimpleKeyValue(): array
+    private static function provideSimpleKeyValue(): array
     {
         return [
             [

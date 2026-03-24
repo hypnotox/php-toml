@@ -10,6 +10,7 @@ use HypnoTox\Toml\Parser\Token\TokenInterface;
 use HypnoTox\Toml\TomlFactory;
 use HypnoTox\Toml\TomlFactoryInterface;
 use HypnoTox\Toml\TomlInterface;
+use Override;
 
 /**
  * @internal
@@ -25,6 +26,7 @@ final class Parser implements ParserInterface
         $this->factory = new TomlFactory();
     }
 
+    #[Override]
     public function parse(string $input): TomlInterface
     {
         $tokens = $this->lexer->tokenize($input);

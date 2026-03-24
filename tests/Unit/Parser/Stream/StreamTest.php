@@ -21,7 +21,7 @@ final class StreamTest extends BaseTest
         $this->assertInstanceOf(StringStreamInterface::class, $instance);
 
         $this->expectException(EncodingException::class);
-        new StringStream(utf8_decode("\x5A\x6F\xC3\xAB"));
+        new StringStream(mb_convert_encoding("\x5A\x6F\xC3\xAB", 'ISO-8859-1', 'UTF-8'));
     }
 
     public function testPeakConsumeAndEndOfFile(): void

@@ -6,9 +6,12 @@ namespace HypnoTox\Toml\Parser\Stream;
 
 use HypnoTox\Toml\Exception\EncodingException;
 use HypnoTox\Toml\Parser\Token\TokenType;
+use Override;
 
 /**
  * @internal
+ *
+ * @psalm-api
  */
 final class StringStream implements StringStreamInterface
 {
@@ -29,16 +32,19 @@ final class StringStream implements StringStreamInterface
         $this->length = mb_strlen($this->input, $this->encoding);
     }
 
+    #[Override]
     public function getPointer(): int
     {
         return $this->pointer;
     }
 
+    #[Override]
     public function peek(int $length = 1): string
     {
         return $this->getSubstring($length);
     }
 
+    #[Override]
     public function peekMatching(string|TokenType $regex): string
     {
         $regex = $regex instanceof TokenType ? $regex->getRegex() : $regex;
@@ -53,6 +59,7 @@ final class StringStream implements StringStreamInterface
         return '';
     }
 
+    #[Override]
     public function consume(int $length = 1): string
     {
         $result = $this->peek($length);
@@ -62,6 +69,7 @@ final class StringStream implements StringStreamInterface
         return $result;
     }
 
+    #[Override]
     public function consumeMatching(string|TokenType $regex): string
     {
         $regex = $regex instanceof TokenType ? $regex->getRegex() : $regex;
@@ -79,6 +87,7 @@ final class StringStream implements StringStreamInterface
         return '';
     }
 
+    #[Override]
     public function matches(string|TokenType $regex): bool
     {
         $regex = $regex instanceof TokenType ? $regex->getRegex() : $regex;
@@ -86,12 +95,13 @@ final class StringStream implements StringStreamInterface
         return 1 === preg_match("~^$regex~u", $this->getSubstring());
     }
 
+    #[Override]
     public function isEndOfFile(): bool
     {
         return $this->pointer === $this->length;
     }
 
-    private function getSubstring(int $length = null, int $offset = 0): string
+    private function getSubstring(?int $length = null, int $offset = 0): string
     {
         return mb_substr($this->input, $this->pointer + $offset, $length, $this->encoding);
     }

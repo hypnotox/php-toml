@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HypnoTox\Toml;
 
 use JsonException;
+use Override;
 
 /**
  * @psalm-immutable
@@ -16,12 +17,14 @@ final class Toml implements TomlInterface
     ) {
     }
 
+    #[Override]
     public function get(string $key): mixed
     {
         // TODO: Implement get() method.
         return null;
     }
 
+    #[Override]
     public function set(string $key, mixed $value): self
     {
         $data = $this->data;
@@ -34,6 +37,7 @@ final class Toml implements TomlInterface
     /**
      * @throws JsonException
      */
+    #[Override]
     public function toJson(): string
     {
         // TODO: Implement JSON string representation according to TOML test suite

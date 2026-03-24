@@ -8,6 +8,8 @@ use HypnoTox\Toml\Parser\Token\TokenType;
 
 /**
  * @internal
+ *
+ * @psalm-api
  */
 interface StringStreamInterface
 {

@@ -8,6 +8,7 @@ use HypnoTox\Toml\Exception\UnableToParseInputException;
 use HypnoTox\Toml\Parser\Lexer\Lexer;
 use HypnoTox\Toml\Parser\Lexer\LexerInterface;
 use HypnoTox\Toml\Tests\Unit\BaseTest;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class LexerTest extends BaseTest
 {
@@ -19,9 +20,7 @@ final class LexerTest extends BaseTest
         $this->assertInstanceOf(LexerInterface::class, $instance);
     }
 
-    /**
-     * @dataProvider tomlProvider
-     */
+    #[DataProvider('tomlProvider')]
     public function testTokenize(string $toml, array $expected): void
     {
         $instance = new Lexer();
@@ -52,8 +51,8 @@ final class LexerTest extends BaseTest
         }
     }
 
-    public function tomlProvider(): array
+    public static function tomlProvider(): array
     {
-        return (new LexerProvider())->provide();
+        return LexerProvider::provide();
     }
 }

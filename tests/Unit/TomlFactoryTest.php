@@ -6,19 +6,18 @@ namespace HypnoTox\Toml\Tests\Unit;
 
 use HypnoTox\Toml\TomlFactory;
 use HypnoTox\Toml\TomlFactoryInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class TomlFactoryTest extends BaseTest
 {
-    /**
-     * @dataProvider tomlFactoryProvider
-     */
+    #[DataProvider('tomlFactoryProvider')]
     public function testCanMake(TomlFactoryInterface $factory): void
     {
         // TODO: Add factory tests
         $this->expectNotToPerformAssertions();
     }
 
-    public function tomlFactoryProvider()
+    public static function tomlFactoryProvider(): array
     {
         $factory = new TomlFactory();
 
