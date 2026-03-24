@@ -5,7 +5,6 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         convertDeprecationsToExceptions="false"
 >
     <php>
         <ini name="display_errors" value="1" />
@@ -15,12 +14,13 @@
     <testsuites>
         <testsuite name="Library Test Suite">
             <directory>tests/Unit</directory>
+            <exclude>tests/Unit/BaseTest.php</exclude>
         </testsuite>
     </testsuites>
 
-	<coverage processUncoveredFiles="true">
-		<include>
-			<directory suffix=".php">src</directory>
-		</include>
-	</coverage>
+    <source>
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </source>
 </phpunit>

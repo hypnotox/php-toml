@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Parser\Token;
 
+use Override;
+
 /**
  * @internal
+ *
+ * @psalm-api
  */
 final class Token implements TokenInterface
 {
@@ -17,11 +21,13 @@ final class Token implements TokenInterface
     ) {
     }
 
+    #[Override]
     public function getType(): TokenType
     {
         return $this->type;
     }
 
+    #[Override]
     public function getValue(): mixed
     {
         return $this->value;

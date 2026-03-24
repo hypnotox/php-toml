@@ -1,11 +1,10 @@
-if [ ! -d "toml-test" ]; then
-  echo "Installing test suite..."
-  git clone https://github.com/BurntSushi/toml-test.git
-  cd toml-test || exit
-  go build ./cmd/toml-test
-  cd ..
-  echo "Test suite installed."
+#!/usr/bin/env bash
+
+if ! command -v toml-test &> /dev/null; then
+    echo "toml-test is not installed."
+    echo "See https://github.com/toml-lang/toml-test for installation instructions."
+    exit 1
 fi
 
-echo "Running test suite..."
-./toml-test/toml-test -- /usr/bin/php tests/toml.php
+echo "Running TOML test suite..."
+toml-test test -decoder "php tests/toml.php"

@@ -6,6 +6,8 @@ namespace HypnoTox\Toml;
 
 /**
  * @psalm-immutable
+ *
+ * @psalm-api
  */
 interface TomlInterface
 {

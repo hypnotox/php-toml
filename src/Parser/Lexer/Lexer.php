@@ -11,6 +11,7 @@ use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
 use HypnoTox\Toml\Parser\Token\Token;
 use HypnoTox\Toml\Parser\Token\TokenInterface;
 use HypnoTox\Toml\Parser\Token\TokenType;
+use Override;
 
 /**
  * @internal
@@ -20,6 +21,7 @@ final class Lexer implements LexerInterface
     /**
      * @throws EncodingException|UnableToParseInputException
      */
+    #[Override]
     public function tokenize(string|StringStream $input): array
     {
         /** @var TokenInterface[] $tokens */

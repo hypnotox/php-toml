@@ -7,39 +7,38 @@ namespace HypnoTox\Toml\Tests\Unit\Parser;
 use Generator;
 use HypnoTox\Toml\Parser\Parser;
 use HypnoTox\Toml\Tests\Unit\BaseTest;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class ParserTest extends BaseTest
 {
-    /**
-//     * @dataProvider validInputProvider
-     */
+    #[DataProvider('validInputProvider')]
     public function testCanParseValidInput(Parser $parser, string $input, string $expectedJson): void
     {
         // TODO: Reactivate parser tests
         $this->expectNotToPerformAssertions();
-//        $this->assertJsonStringEqualsJsonString($expectedJson, $parser->parse($input)->toJson());
+        //        $this->assertJsonStringEqualsJsonString($expectedJson, $parser->parse($input)->toJson());
     }
 
-//    /**
-//     * @dataProvider invalidInputProvider
-//     */
-//    public function testWillThrowOnInvalidInput(Parser $parser, string $input): void
-//    {
-//        $this->expectException(TomlExceptionInterface::class);
-//        $parser->parse($input);
-//    }
+    //    /**
+    //     * @dataProvider invalidInputProvider
+    //     */
+    //    public function testWillThrowOnInvalidInput(Parser $parser, string $input): void
+    //    {
+    //        $this->expectException(TomlExceptionInterface::class);
+    //        $parser->parse($input);
+    //    }
 
-    public function getParser(): Parser
+    public static function getParser(): Parser
     {
         return new Parser();
     }
 
-    public function validInputProvider(): Generator
+    public static function validInputProvider(): Generator
     {
-        $parser = $this->getParser();
+        $parser = self::getParser();
 
         /** @var array $values */
-        foreach ($this->generateFromDirectory(__DIR__.'/../../Fixtures/valid') as $values) {
+        foreach (self::generateFromDirectory(__DIR__.'/../../Fixtures/valid') as $values) {
             array_unshift($values, $parser);
 
             yield $values;
@@ -47,19 +46,19 @@ final class ParserTest extends BaseTest
         }
     }
 
-    public function invalidInputProvider(): Generator
+    public static function invalidInputProvider(): Generator
     {
-        $parser = $this->getParser();
+        $parser = self::getParser();
 
         /** @var array $values */
-        foreach ($this->generateFromDirectory(__DIR__.'/../../Fixtures/invalid', false) as $values) {
+        foreach (self::generateFromDirectory(__DIR__.'/../../Fixtures/invalid', false) as $values) {
             array_unshift($values, $parser);
 
             yield $values;
         }
     }
 
-    private function generateFromDirectory(string $directory, bool $withJson = true): Generator
+    private static function generateFromDirectory(string $directory, bool $withJson = true): Generator
     {
         $directoryIterator = scandir($directory);
 
@@ -69,7 +68,7 @@ final class ParserTest extends BaseTest
             }
 
             if (is_dir($directory.\DIRECTORY_SEPARATOR.$value)) {
-                yield from $this->generateFromDirectory($directory.\DIRECTORY_SEPARATOR.$value, $withJson);
+                yield from self::generateFromDirectory($directory.\DIRECTORY_SEPARATOR.$value, $withJson);
             } elseif (str_ends_with($value, '.toml')) {
                 if ($withJson) {
                     yield [

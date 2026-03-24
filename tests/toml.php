@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Tests;
 
-use HypnoTox\Toml\Parser\Lexer\Lexer;
 use HypnoTox\Toml\Parser\Parser;
 use Throwable;
 
-include 'vendor/autoload.php';
+include __DIR__.'/../vendor/autoload.php';
 
-stream_set_blocking(\STDIN, false);
 $data = stream_get_contents(\STDIN);
 
-$parser = new Parser(
-    new Lexer(),
-);
+$parser = new Parser();
 
 try {
     echo $parser->parse($data)->toJson();

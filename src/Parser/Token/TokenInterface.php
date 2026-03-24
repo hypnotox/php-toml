@@ -6,6 +6,8 @@ namespace HypnoTox\Toml\Parser\Token;
 
 /**
  * @internal
+ *
+ * @psalm-api
  */
 interface TokenInterface
 {

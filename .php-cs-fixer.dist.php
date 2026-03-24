@@ -24,7 +24,7 @@ return (new PhpCsFixer\Config())
         'date_time_immutable'                              => true,
         'declare_parentheses'                              => true,
         'global_namespace_import'                          => ['import_classes' => true, 'import_constants' => false, 'import_functions' => false],
-        'nullable_type_declaration_for_default_null_value' => ['use_nullable_type_declaration' => false],
+        'nullable_type_declaration_for_default_null_value' => ['use_nullable_type_declaration' => true],
         'self_static_accessor'                             => true,
         'simplified_if_return'                             => true,
         'simplified_null_return'                           => true,
