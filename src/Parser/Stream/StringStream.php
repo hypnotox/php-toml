@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Parser\Stream;
 
 use HypnoTox\Toml\Exception\EncodingException;
-use HypnoTox\Toml\Parser\Token\TokenType;
 use Override;
 
 /**
@@ -16,6 +15,8 @@ use Override;
 final class StringStream implements StringStreamInterface
 {
     private readonly int $length;
+    private int $line = 1;
+    private int $column = 1;
 
     /**
      * @throws EncodingException
@@ -39,15 +40,26 @@ final class StringStream implements StringStreamInterface
     }
 
     #[Override]
+    public function getLine(): int
+    {
+        return $this->line;
+    }
+
+    #[Override]
+    public function getColumn(): int
+    {
+        return $this->column;
+    }
+
+    #[Override]
     public function peek(int $length = 1): string
     {
         return $this->getSubstring($length);
     }
 
     #[Override]
-    public function peekMatching(string|TokenType $regex): string
+    public function peekMatching(string $regex): string
     {
-        $regex = $regex instanceof TokenType ? $regex->getRegex() : $regex;
         $matches = [];
 
         preg_match("~^$regex~u", $this->getSubstring(), $matches);
@@ -66,13 +78,14 @@ final class StringStream implements StringStreamInterface
         $resultLength = mb_strlen($result, $this->encoding);
         $this->pointer += $resultLength;
 
+        $this->updatePosition($result);
+
         return $result;
     }
 
     #[Override]
-    public function consumeMatching(string|TokenType $regex): string
+    public function consumeMatching(string $regex): string
     {
-        $regex = $regex instanceof TokenType ? $regex->getRegex() : $regex;
         $matches = [];
 
         preg_match("~^$regex~u", $this->getSubstring(), $matches);
@@ -88,10 +101,8 @@ final class StringStream implements StringStreamInterface
     }
 
     #[Override]
-    public function matches(string|TokenType $regex): bool
+    public function matches(string $regex): bool
     {
-        $regex = $regex instanceof TokenType ? $regex->getRegex() : $regex;
-
         return 1 === preg_match("~^$regex~u", $this->getSubstring());
     }
 
@@ -101,8 +112,36 @@ final class StringStream implements StringStreamInterface
         return $this->pointer === $this->length;
     }
 
+    #[Override]
+    public function save(): array
+    {
+        return [$this->pointer, $this->line, $this->column];
+    }
+
+    #[Override]
+    public function restore(array $state): void
+    {
+        [$this->pointer, $this->line, $this->column] = $state;
+    }
+
     private function getSubstring(?int $length = null, int $offset = 0): string
     {
         return mb_substr($this->input, $this->pointer + $offset, $length, $this->encoding);
+    }
+
+    private function updatePosition(string $consumed): void
+    {
+        $len = mb_strlen($consumed, $this->encoding);
+
+        for ($i = 0; $i < $len; ++$i) {
+            $char = mb_substr($consumed, $i, 1, $this->encoding);
+
+            if ("\n" === $char) {
+                ++$this->line;
+                $this->column = 1;
+            } else {
+                ++$this->column;
+            }
+        }
     }
 }

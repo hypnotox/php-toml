@@ -4,25 +4,45 @@ declare(strict_types=1);
 
 namespace HypnoTox\Toml\Tests\Unit;
 
+use HypnoTox\Toml\Toml;
 use HypnoTox\Toml\TomlFactory;
-use HypnoTox\Toml\TomlFactoryInterface;
-use PHPUnit\Framework\Attributes\DataProvider;
+use HypnoTox\Toml\TomlInterface;
 
 final class TomlFactoryTest extends BaseTest
 {
-    #[DataProvider('tomlFactoryProvider')]
-    public function testCanMake(TomlFactoryInterface $factory): void
-    {
-        // TODO: Add factory tests
-        $this->expectNotToPerformAssertions();
-    }
-
-    public static function tomlFactoryProvider(): array
+    public function testMakeCreatesEmptyToml(): void
     {
         $factory = new TomlFactory();
+        $toml = $factory->make();
 
-        return [
-            [$factory],
-        ];
+        $this->assertInstanceOf(TomlInterface::class, $toml);
+        $this->assertInstanceOf(Toml::class, $toml);
+        $this->assertSame([], $toml->toArray());
+    }
+
+    public function testFromStringParsesToml(): void
+    {
+        $factory = new TomlFactory();
+        $toml = $factory->fromString("title = \"TOML Example\"\n");
+
+        $this->assertInstanceOf(TomlInterface::class, $toml);
+        $this->assertSame('TOML Example', $toml->get('title'));
+    }
+
+    public function testEndToEndFactoryParseGetValues(): void
+    {
+        $factory = new TomlFactory();
+        $input = <<<'TOML'
+            [server]
+            host = "localhost"
+            port = 8080
+            enabled = true
+            TOML;
+
+        $toml = $factory->fromString($input);
+
+        $this->assertSame('localhost', $toml->get('server.host'));
+        $this->assertSame(8080, $toml->get('server.port'));
+        $this->assertTrue($toml->get('server.enabled'));
     }
 }

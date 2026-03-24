@@ -7,7 +7,7 @@ namespace HypnoTox\Toml;
 /** @psalm-api */
 interface TomlFactoryInterface
 {
-    public function make(array $data = []): TomlInterface;
+    public function make(): TomlInterface;
 
     public function fromString(string $input): TomlInterface;
 }
