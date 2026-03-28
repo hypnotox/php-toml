@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Tests\Unit\Parser;
 
 use Generator;
+use HypnoTox\Toml\Exception\SyntaxException;
 use HypnoTox\Toml\Exception\TomlExceptionInterface;
 use HypnoTox\Toml\Parser\Parser;
 use HypnoTox\Toml\Tests\Unit\BaseTest;
@@ -129,6 +130,123 @@ final class ParserTest extends BaseTest
     {
         $result = (new Parser())->parse('val = 0x7FFFFFFFFFFFFFFF');
         $this->assertSame(\PHP_INT_MAX, $result->get('val'));
+    }
+
+    public function testUtf8BomIsStripped(): void
+    {
+        $bom = "\xEF\xBB\xBF";
+        $result = (new Parser())->parse($bom.'key = "value"');
+        $this->assertSame('value', $result->get('key'));
+    }
+
+    public function testTableDefWhenParentIsValueArrayThrows(): void
+    {
+        $this->expectException(TomlExceptionInterface::class);
+        (new Parser())->parse("a = [1]\n[a.b]");
+    }
+
+    public function testAotOnKeyThatIsValueThrows(): void
+    {
+        $this->expectException(TomlExceptionInterface::class);
+        (new Parser())->parse("a = 1\n[[a]]");
+    }
+
+    public function testAotNavigateThroughNonAotArrayThrows(): void
+    {
+        // a is a value array (not AoT), so [[a.c]] can't navigate through it
+        $this->expectException(TomlExceptionInterface::class);
+        (new Parser())->parse("a = [{b = 1}]\n[[a.c]]");
+    }
+
+    public function testExtendInlineTableViaAotThrows(): void
+    {
+        $this->expectException(TomlExceptionInterface::class);
+        (new Parser())->parse("a = {b = 1}\n[[a]]");
+    }
+
+    public function testExtendInlineTableViaDottedKeyThrows(): void
+    {
+        $this->expectException(SyntaxException::class);
+        (new Parser())->parse("a = {b = 1}\na.c = 2");
+    }
+
+    public function testIntermediateDottedKeyConflictInInlineTable(): void
+    {
+        // a.b is a dotted key, then a = 2 tries to redefine intermediate 'a'
+        $this->expectException(SyntaxException::class);
+        (new Parser())->parse('x = {a.b = 1, a = 2}');
+    }
+
+    public function testRedefinedKeyAsTableInInlineTable(): void
+    {
+        // a is defined as value, then a.b tries to use it as table
+        $this->expectException(SyntaxException::class);
+        (new Parser())->parse('x = {a = 1, a.b = 2}');
+    }
+
+    public function testMissingCommaInInlineTableThrows(): void
+    {
+        $this->expectException(SyntaxException::class);
+        (new Parser())->parse('x = {a = 1 b = 2}');
+    }
+
+    public function testInvalidTimezoneOffsetThrows(): void
+    {
+        $this->expectException(SyntaxException::class);
+        (new Parser())->parse('val = 1979-05-27T07:32:00+25:00');
+    }
+
+    public function testFeb29OnNonLeapYearThrows(): void
+    {
+        $this->expectException(SyntaxException::class);
+        (new Parser())->parse('val = 2023-02-29T00:00:00');
+    }
+
+    public function testFeb29OnLeapYearSucceeds(): void
+    {
+        $result = (new Parser())->parse('val = 2024-02-29T00:00:00');
+        $this->assertSame('2024-02-29T00:00:00', $result->get('val'));
+    }
+
+    public function testLeapYearDivisibleBy400(): void
+    {
+        $result = (new Parser())->parse('val = 2000-02-29T00:00:00');
+        $this->assertSame('2000-02-29T00:00:00', $result->get('val'));
+    }
+
+    public function testNonLeapYearDivisibleBy100(): void
+    {
+        $this->expectException(SyntaxException::class);
+        (new Parser())->parse('val = 1900-02-29T00:00:00');
+    }
+
+    public function testAotDefineWhenAlreadyDefinedAsExplicitTableThrows(): void
+    {
+        $this->expectException(TomlExceptionInterface::class);
+        (new Parser())->parse("[a]\n[[a]]");
+    }
+
+    public function testAotWithExistingTableParentNavigatesChild(): void
+    {
+        // [a] defines table a, then [[a.b]] navigates through it (non-final key in AoT)
+        $result = (new Parser())->parse("[a]\nkey = 1\n[[a.b]]\nval = 2");
+        $this->assertSame(1, $result->get('a.key'));
+    }
+
+    public function testMultilineBasicStringWithCrlfPreserved(): void
+    {
+        // Valid CRLF in multiline basic string should parse without error
+        $toml = "val = \"\"\"\r\nline1\r\nline2\"\"\"";
+        $result = (new Parser())->parse($toml);
+        $this->assertStringContainsString('line1', (string) $result->get('val'));
+    }
+
+    public function testMultilineLiteralStringWithCrlfPreserved(): void
+    {
+        // Valid CRLF in multiline literal string should parse without error
+        $toml = "val = '''\r\nline1\r\nline2'''";
+        $result = (new Parser())->parse($toml);
+        $this->assertStringContainsString('line1', (string) $result->get('val'));
     }
 
     /**

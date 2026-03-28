@@ -485,4 +485,100 @@ final class TomlEncoderTest extends BaseTest
         self::assertSame([1, 2, 3], $output['list']);
         self::assertSame(['key' => 'value'], $output['nested']);
     }
+
+    public function testEncodeInlineTableAsScalarValue(): void
+    {
+        $inner = new TomlTable();
+        $inner->set('x', new TomlValue(ValueType::Integer, 1));
+        $inner->set('y', new TomlValue(ValueType::Integer, 2));
+
+        $root = new TomlTable();
+        $root->set('point', $inner);
+
+        // When encoded as a top-level key, inner tables become [table] sections
+        $toml = new Toml($root);
+        $output = $this->encoder->encode($toml);
+        self::assertStringContainsString('[point]', $output);
+    }
+
+    public function testEncodeEmptyInlineTable(): void
+    {
+        // Mix a table with a scalar so isArrayOfTables returns false
+        $emptyTable = new TomlTable();
+        $array = new TomlArray([
+            $emptyTable,
+            new TomlValue(ValueType::Integer, 1),
+        ]);
+
+        $root = new TomlTable();
+        $root->set('items', $array);
+
+        $toml = new Toml($root);
+        $output = $this->encoder->encode($toml);
+        self::assertStringContainsString('{}', $output);
+    }
+
+    public function testEncodeInlineTableWithEntries(): void
+    {
+        $inner = new TomlTable();
+        $inner->set('a', new TomlValue(ValueType::Integer, 1));
+        $inner->set('b', new TomlValue(ValueType::String, 'two'));
+
+        // Mix with scalar so isArrayOfTables returns false, triggering formatInlineTable
+        $array = new TomlArray([
+            $inner,
+            new TomlValue(ValueType::Integer, 99),
+        ]);
+
+        $root = new TomlTable();
+        $root->set('items', $array);
+
+        $toml = new Toml($root);
+        $output = $this->encoder->encode($toml);
+        self::assertStringContainsString('a = 1', $output);
+        self::assertStringContainsString('b = "two"', $output);
+    }
+
+    public function testEncodeMultilineArray(): void
+    {
+        // Create an array with enough long string values to exceed 80 chars inline
+        $items = [];
+        for ($i = 0; $i < 5; ++$i) {
+            $items[] = new TomlValue(ValueType::String, 'this-is-a-fairly-long-string-value-'.$i);
+        }
+
+        $root = new TomlTable();
+        $root->set('long', new TomlArray($items));
+
+        $toml = new Toml($root);
+        $output = $this->encoder->encode($toml);
+        // Multiline arrays have items on separate lines with indentation
+        self::assertStringContainsString("[\n", $output);
+        self::assertStringContainsString('    "this-is-a-fairly-long-string-value-0",', $output);
+    }
+
+    public function testEncodeArrayWithComplexItems(): void
+    {
+        // Array containing a non-empty array (complex item)
+        $inner = new TomlArray([new TomlValue(ValueType::Integer, 1)]);
+
+        $root = new TomlTable();
+        $root->set('nested', new TomlArray([$inner]));
+
+        $toml = new Toml($root);
+        $output = $this->encoder->encode($toml);
+        // Should use multiline format due to complex items
+        self::assertStringContainsString("[\n", $output);
+    }
+
+    public function testEncodeFloatWithoutDecimalPoint(): void
+    {
+        // A float like 1e10 has no decimal point, so .0 should be appended
+        $root = new TomlTable();
+        $root->set('val', new TomlValue(ValueType::Float, 1.0));
+
+        $toml = new Toml($root);
+        $output = $this->encoder->encode($toml);
+        self::assertMatchesRegularExpression('/val = 1(\.0)?/', $output);
+    }
 }

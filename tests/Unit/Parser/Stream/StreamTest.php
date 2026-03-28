@@ -121,4 +121,13 @@ final class StreamTest extends BaseTest
         $this->assertSame(2, $instance->getLine());
         $this->assertSame(1, $instance->getColumn());
     }
+
+    public function testGetPointer(): void
+    {
+        $instance = new StringStream('hello');
+        $this->assertSame(0, $instance->getPointer());
+
+        $instance->consume(3);
+        $this->assertSame(3, $instance->getPointer());
+    }
 }

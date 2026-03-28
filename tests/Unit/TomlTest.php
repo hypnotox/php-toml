@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace HypnoTox\Toml\Tests\Unit;
 
 use DateTimeImmutable;
+use HypnoTox\Toml\Parser\TomlArray;
 use HypnoTox\Toml\Parser\TomlTable;
 use HypnoTox\Toml\Parser\TomlValue;
 use HypnoTox\Toml\Parser\ValueType;
 use HypnoTox\Toml\Toml;
+use Stringable;
 
 final class TomlTest extends BaseTest
 {
@@ -152,5 +154,75 @@ final class TomlTest extends BaseTest
         $data = $toml->getData();
 
         $this->assertSame($value, $data->get('key'));
+    }
+
+    public function testGetReturnsNonValueNode(): void
+    {
+        // get() on a key that maps to a TomlTable should return the TomlTable, not unwrap it
+        $inner = new TomlTable();
+        $inner->set('child', new TomlValue(ValueType::String, 'nested'));
+
+        $root = new TomlTable();
+        $root->set('sub', $inner);
+
+        $toml = new Toml($root);
+        $result = $toml->get('sub');
+        $this->assertInstanceOf(TomlTable::class, $result);
+    }
+
+    public function testGetReturnsArrayNode(): void
+    {
+        $array = new TomlArray([
+            new TomlValue(ValueType::Integer, 1),
+            new TomlValue(ValueType::Integer, 2),
+        ]);
+
+        $root = new TomlTable();
+        $root->set('list', $array);
+
+        $toml = new Toml($root);
+        $result = $toml->get('list');
+        $this->assertInstanceOf(TomlArray::class, $result);
+    }
+
+    public function testFromArrayWithObjectFallsBackToString(): void
+    {
+        // An object that isn't DateTimeInterface should be cast to string
+        $obj = new class implements Stringable {
+            public function __toString(): string
+            {
+                return 'stringified';
+            }
+        };
+
+        $toml = Toml::fromArray(['obj' => $obj]);
+        $this->assertSame('stringified', $toml->get('obj'));
+    }
+
+    public function testToJsonWithExactIntegerFloat(): void
+    {
+        // Float value that is an exact integer (e.g. 42.0) — tests formatFloatForTest
+        $root = new TomlTable();
+        $root->set('val', new TomlValue(ValueType::Float, 42.0));
+
+        $toml = new Toml($root);
+        $json = $toml->toJson();
+
+        $decoded = json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
+        $this->assertSame('float', $decoded['val']['type']);
+        $this->assertSame('42', $decoded['val']['value']);
+    }
+
+    public function testToJsonWithLargeExactFloat(): void
+    {
+        // Float that is exact integer but too large for int cast round-trip
+        $root = new TomlTable();
+        $root->set('val', new TomlValue(ValueType::Float, 1e19));
+
+        $toml = new Toml($root);
+        $json = $toml->toJson();
+
+        $decoded = json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
+        $this->assertSame('float', $decoded['val']['type']);
     }
 }

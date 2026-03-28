@@ -7,6 +7,7 @@ namespace HypnoTox\Toml\Tests\Unit\Parser\Lexer;
 use HypnoTox\Toml\Exception\SyntaxException;
 use HypnoTox\Toml\Parser\Lexer\Lexer;
 use HypnoTox\Toml\Parser\Lexer\LexerContext;
+use HypnoTox\Toml\Parser\Stream\StringStreamInterface;
 use HypnoTox\Toml\Parser\Token\TokenType;
 use HypnoTox\Toml\Tests\Unit\BaseTest;
 
@@ -265,5 +266,169 @@ final class LexerTest extends BaseTest
         $lexer = new Lexer('!');
         $this->expectException(SyntaxException::class);
         $lexer->next(LexerContext::AfterKey);
+    }
+
+    public function testGetStream(): void
+    {
+        $lexer = new Lexer('test');
+        $this->assertInstanceOf(StringStreamInterface::class, $lexer->getStream());
+    }
+
+    public function testBareCarriageReturnInNewlineThrows(): void
+    {
+        // A bare \r without a following \n in a newline position
+        $lexer = new Lexer("key = 1\r ");
+        // Consume the key=value first
+        $lexer->next(LexerContext::Key); // key
+        $lexer->next(LexerContext::AfterKey); // whitespace
+        $lexer->next(LexerContext::AfterKey); // =
+        $lexer->next(LexerContext::Value); // whitespace
+        $lexer->next(LexerContext::Value); // 1
+        $this->expectException(SyntaxException::class);
+        $this->expectExceptionMessage('Bare carriage return');
+        $lexer->next(LexerContext::LineStart); // \r without \n
+    }
+
+    public function testUnterminatedBasicStringThrows(): void
+    {
+        $lexer = new Lexer('"hello');
+        $this->expectException(SyntaxException::class);
+        $this->expectExceptionMessage('Unterminated basic string');
+        $lexer->next(LexerContext::Value);
+    }
+
+    public function testUnterminatedLiteralStringThrows(): void
+    {
+        $lexer = new Lexer("'hello");
+        $this->expectException(SyntaxException::class);
+        $this->expectExceptionMessage('Unterminated literal string');
+        $lexer->next(LexerContext::Value);
+    }
+
+    public function testMultilineBasicStringWithCrlfAfterDelimiter(): void
+    {
+        // """\r\nvalue""" — CRLF immediately after opening delimiter
+        $lexer = new Lexer("\"\"\"\r\nvalue\"\"\"");
+        $token = $lexer->next(LexerContext::Value);
+        $this->assertSame(TokenType::T_ML_BASIC_STRING, $token->type);
+        $this->assertSame('value', $token->value);
+    }
+
+    public function testBareCarriageReturnInMultilineBasicStringThrows(): void
+    {
+        // \r without \n inside a multiline basic string
+        $lexer = new Lexer("\"\"\"\nhello\r world\"\"\"");
+        $this->expectException(SyntaxException::class);
+        $this->expectExceptionMessage('Bare carriage return');
+        $lexer->next(LexerContext::Value);
+    }
+
+    public function testNewlineInLiteralStringThrows(): void
+    {
+        $lexer = new Lexer("'hello\nworld'");
+        $this->expectException(SyntaxException::class);
+        $this->expectExceptionMessage('Newline in literal string');
+        $lexer->next(LexerContext::Value);
+    }
+
+    public function testMultilineLiteralStringWithCrlfAfterDelimiter(): void
+    {
+        // '''\r\nvalue''' — CRLF immediately after opening delimiter
+        $lexer = new Lexer("'''\r\nvalue'''");
+        $token = $lexer->next(LexerContext::Value);
+        $this->assertSame(TokenType::T_ML_LITERAL_STRING, $token->type);
+        $this->assertSame('value', $token->value);
+    }
+
+    public function testBareCarriageReturnInMultilineLiteralStringThrows(): void
+    {
+        $lexer = new Lexer("'''\nhello\r world'''");
+        $this->expectException(SyntaxException::class);
+        $this->expectExceptionMessage('Bare carriage return');
+        $lexer->next(LexerContext::Value);
+    }
+
+    public function testUnterminatedMultilineLiteralStringThrows(): void
+    {
+        $lexer = new Lexer("'''hello");
+        $this->expectException(SyntaxException::class);
+        $this->expectExceptionMessage('Unterminated multiline literal string');
+        $lexer->next(LexerContext::Value);
+    }
+
+    public function testEofInEscapeSequenceThrows(): void
+    {
+        $lexer = new Lexer('"\\');
+        $this->expectException(SyntaxException::class);
+        $lexer->next(LexerContext::Value);
+    }
+
+    public function testInvalidUnicodeEscapeHexThrows(): void
+    {
+        $lexer = new Lexer('"\\uZZZZ"');
+        $this->expectException(SyntaxException::class);
+        $this->expectExceptionMessage('Invalid unicode escape');
+        $lexer->next(LexerContext::Value);
+    }
+
+    public function testSignedValueEofThrows(): void
+    {
+        $lexer = new Lexer('+');
+        $this->expectException(SyntaxException::class);
+        $lexer->next(LexerContext::Value);
+    }
+
+    public function testExpectedDigitAfterSignThrows(): void
+    {
+        $lexer = new Lexer('+x');
+        $this->expectException(SyntaxException::class);
+        $lexer->next(LexerContext::Value);
+    }
+
+    public function testUnderscoreAfterHexPrefixThrows(): void
+    {
+        // 0x_FF — underscore right after prefix; scanner rejects before validateUnderscores
+        $lexer = new Lexer('0x_FF');
+        $this->expectException(SyntaxException::class);
+        $lexer->next(LexerContext::Value);
+    }
+
+    public function testBoolLikeWordBoundaryFailureThrows(): void
+    {
+        // "truthy" starts with 't' so scanBool is entered, but word boundary check fails
+        $lexer = new Lexer('truthy');
+        $this->expectException(SyntaxException::class);
+        $this->expectExceptionMessage('expected value');
+        $lexer->next(LexerContext::Value);
+    }
+
+    public function testMultilineBasicStringWithValidCrlf(): void
+    {
+        // Valid CRLF inside multiline basic string (not at the opening delimiter)
+        $lexer = new Lexer("\"\"\"\nline1\r\nline2\"\"\"");
+        $token = $lexer->next(LexerContext::Value);
+        $this->assertSame(TokenType::T_ML_BASIC_STRING, $token->type);
+        $this->assertStringContainsString("line1\r\nline2", $token->value);
+    }
+
+    public function testMultilineLiteralStringWithValidCrlf(): void
+    {
+        // Valid CRLF inside multiline literal string
+        $lexer = new Lexer("'''\nline1\r\nline2'''");
+        $token = $lexer->next(LexerContext::Value);
+        $this->assertSame(TokenType::T_ML_LITERAL_STRING, $token->type);
+        $this->assertStringContainsString("line1\r\nline2", $token->value);
+    }
+
+    public function testBareCarriageReturnInArrayContextThrows(): void
+    {
+        // Bare CR in an array context triggers scanNewline path
+        $lexer = new Lexer("[1,\r 2]");
+        $lexer->next(LexerContext::Value); // [
+        $lexer->next(LexerContext::ArrayItem); // 1
+        $lexer->next(LexerContext::ArrayItem); // ,
+        $this->expectException(SyntaxException::class);
+        $this->expectExceptionMessage('Bare carriage return');
+        $lexer->next(LexerContext::ArrayItem); // \r without \n
     }
 }
